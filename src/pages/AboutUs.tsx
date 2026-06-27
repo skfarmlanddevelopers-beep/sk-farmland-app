@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { ShieldCheck, FileText, Milestone, Zap, Sprout, Landmark, MapPin, Smile, Compass, Sparkles, PhoneCall } from 'lucide-react';
 import { trustHighlights } from '../data';
+import gallery7 from '../assets/gallery-7.jpeg';
 
 interface AboutUsProps {
   onBookClick: () => void;
@@ -127,7 +128,7 @@ export default function AboutUs({ onBookClick }: AboutUsProps) {
           <div ref={imgContainerRef} className="relative group">
             <div className="relative rounded-2xl overflow-hidden border border-zinc-800 h-80">
               <motion.img
-                src="https://images.unsplash.com/photo-1592417817098-8f3d6eb19675?auto=format&fit=crop&w=700&q=80"
+                src={gallery7}
                 alt="Agricultural plantation grid"
                 referrerPolicy="no-referrer"
                 style={{ y: imgY }}

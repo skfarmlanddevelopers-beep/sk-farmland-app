@@ -1,5 +1,29 @@
 import { StatItem, ProjectItem, GalleryItem } from './types';
 
+// Import all 22 gallery images from local assets
+import g1 from './assets/gallery-1.jpeg';
+import g2 from './assets/gallery-2.jpeg';
+import g3 from './assets/gallery-3.jpeg';
+import g4 from './assets/gallery-4.jpeg';
+import g5 from './assets/gallery-5.jpeg';
+import g6 from './assets/gallery-6.jpeg';
+import g7 from './assets/gallery-7.jpeg';
+import g8 from './assets/gallery-8.jpeg';
+import g9 from './assets/gallery-9.jpeg';
+import g10 from './assets/gallery-10.jpeg';
+import g11 from './assets/gallery-11.jpeg';
+import g12 from './assets/gallery-12.jpeg';
+import g13 from './assets/gallery-13.jpeg';
+import g14 from './assets/gallery-14.jpeg';
+import g15 from './assets/gallery-15.jpeg';
+import g16 from './assets/gallery-16.jpeg';
+import g17 from './assets/gallery-17.jpeg';
+import g18 from './assets/gallery-18.jpeg';
+import g19 from './assets/gallery-19.jpeg';
+import g20 from './assets/gallery-20.jpeg';
+import g21 from './assets/gallery-21.jpeg';
+import g22 from './assets/gallery-22.jpeg';
+
 export const statsData: StatItem[] = [
   { icon: 'Map', label: 'Acres Developed', value: '700+' },
   { icon: 'Users', label: 'Happy Customers', value: '1,000+' },
@@ -37,7 +61,7 @@ export const projectList: ProjectItem[] = [
     distance: '35 mins from Electronic City',
     price: '₹499 - ₹649 per sq.ft',
     size: 'Starts from 0.25 Acre (Quarter Acre)',
-    image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=80',
+    image: g1,
     type: 'Managed',
     status: 'Ongoing',
     features: [
@@ -54,7 +78,7 @@ export const projectList: ProjectItem[] = [
     distance: '45 mins from Bannerghatta Road',
     price: '₹599 - ₹749 per sq.ft',
     size: '0.25, 0.5 & 1-2 Acres',
-    image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1200&q=80',
+    image: g2,
     type: 'Premium',
     status: 'Ongoing',
     features: [
@@ -71,7 +95,7 @@ export const projectList: ProjectItem[] = [
     distance: '50 mins from Kanakapura Road Metro',
     price: '₹699 - ₹849 per sq.ft',
     size: 'Starts from 0.5 Acre',
-    image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=1200&q=80',
+    image: g3,
     type: 'Managed',
     status: 'Completed',
     features: [
@@ -88,7 +112,7 @@ export const projectList: ProjectItem[] = [
     distance: 'Premium Scenic Location',
     price: '₹499 - ₹599 per sq.ft',
     size: '0.5 Acre & 1 Acre Plots',
-    image: 'https://images.unsplash.com/photo-1557800636-534a24216f24?auto=format&fit=crop&w=1200&q=80',
+    image: g4,
     type: 'Plain',
     status: 'Upcoming',
     features: [
@@ -105,7 +129,7 @@ export const projectList: ProjectItem[] = [
     distance: '40 mins from Electronic City',
     price: '₹549 - ₹699 per sq.ft',
     size: 'Starts from 0.25 Acre',
-    image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80',
+    image: g5,
     type: 'Premium',
     status: 'Upcoming',
     features: [
@@ -122,7 +146,7 @@ export const projectList: ProjectItem[] = [
     distance: '30 mins from Bannerghatta Main Gate',
     price: '₹649 - ₹799 per sq.ft',
     size: 'Starts from 0.5 Acre',
-    image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80',
+    image: g6,
     type: 'Managed',
     status: 'Ongoing',
     features: [
@@ -189,42 +213,154 @@ export const galleryData: GalleryItem[] = [
     id: 'g-1',
     title: 'Grand Entrance Gate',
     category: 'Entrance',
-    image: 'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80',
-    description: 'The elegant modern wood-paneled community entrance gate, illuminated beautifully at night.',
+    image: g1,
+    description: 'The elegant modern wood-paneled community entrance gate, welcoming owners to their serene lands.',
   },
   {
     id: 'g-2',
     title: 'Scenic Farmhouse Cottage',
     category: 'Farmhouse',
-    image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=800&q=80',
-    description: 'A cozy double-story weekend farmhouse nestled amidst lush green lawns and stone pathways.',
+    image: g2,
+    description: 'A cozy double-story weekend farmhouse cottage nestled amidst green lawns and trees.',
   },
   {
     id: 'g-3',
-    title: 'Mango & Fruit Orchards',
+    title: 'Organic Fruit Plantation',
     category: 'Crops',
-    image: 'https://images.unsplash.com/photo-1557800636-534a24216f24?auto=format&fit=crop&w=800&q=80',
-    description: 'Lush golden mango trees growing under scientific organic drip-irrigation management.',
+    image: g3,
+    description: 'Healthy plantation grids with scientific drip irrigation networks.',
   },
   {
     id: 'g-4',
-    title: 'Manicured Stone Pathway',
+    title: 'Layout Road Infrastructure',
     category: 'Land',
-    image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80',
-    description: 'Winding stone-paved walk paths traversing the manicured gardens of our premium projects.',
+    image: g4,
+    description: 'Neatly developed asphalt and CC internal roads providing excellent connectivity within the project.',
   },
   {
     id: 'g-5',
-    title: 'High-Yield Farming Grid',
+    title: 'Organic Crops Cultivation',
     category: 'Crops',
-    image: 'https://images.unsplash.com/photo-1592417817098-8f3d6eb19675?auto=format&fit=crop&w=800&q=80',
-    description: 'Organic farming grids ready for seasonal vegetables, banana, and papaya cultivation.',
+    image: g5,
+    description: 'Intercropping layouts featuring organic papaya, banana, and vegetables.',
   },
   {
     id: 'g-6',
-    title: 'Dusk at Tamarind Valley',
+    title: 'Vast Managed Farmland Landscape',
     category: 'Land',
-    image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80',
-    description: 'The sprawling, peaceful, and clean farmland landscapes near Hosur at dusk.',
+    image: g6,
+    description: 'Sprawling green farmland plots near Hosur, presenting a perfect blend of ecology and investment.',
+  },
+  {
+    id: 'g-7',
+    title: 'Front Entrance Gateway',
+    category: 'Entrance',
+    image: g7,
+    description: 'The primary gated entrance structure showing high security fencing and checkposts.',
+  },
+  {
+    id: 'g-8',
+    title: 'Aesthetic Weekend Cabin',
+    category: 'Farmhouse',
+    image: g8,
+    description: 'Beautiful wood-finished modular cabin layout ideal for short weekend stays and vacations.',
+  },
+  {
+    id: 'g-9',
+    title: 'Drip Network Plantation',
+    category: 'Crops',
+    image: g9,
+    description: 'Automated pressure-managed drip lines linked to high-yield fruit trees.',
+  },
+  {
+    id: 'g-10',
+    title: 'Cement Concrete Roads',
+    category: 'Land',
+    image: g10,
+    description: 'Wide, heavy-load bearing concrete roads lining our premium corridors.',
+  },
+  {
+    id: 'g-11',
+    title: 'Site Visit Overview',
+    category: 'Entrance',
+    image: g11,
+    description: 'Guided pathway maps and plots ready for site visits and registration.',
+  },
+  {
+    id: 'g-12',
+    title: 'Luxury Eco-Stay Cottage',
+    category: 'Farmhouse',
+    image: g12,
+    description: 'Premium farmhouse construction design showcasing modern stone masonry.',
+  },
+  {
+    id: 'g-13',
+    title: 'Scientific Agri Layout',
+    category: 'Crops',
+    image: g13,
+    description: 'Carefully spaced saplings designed for maximum yields and growth.',
+  },
+  {
+    id: 'g-14',
+    title: 'Serene Nature Plots',
+    category: 'Land',
+    image: g14,
+    description: 'Lush boundary alignments offering a peaceful and healthy environment.',
+  },
+  {
+    id: 'g-15',
+    title: 'High-Growth Sapling Rows',
+    category: 'Crops',
+    image: g15,
+    description: 'Soil-enriched mango and guava saplings maintained by on-site agronomists.',
+  },
+  {
+    id: 'g-16',
+    title: 'Compound Frontage Fencing',
+    category: 'Land',
+    image: g16,
+    description: 'Picket-style front fencing ensuring clear marking and premium look for every plot.',
+  },
+  {
+    id: 'g-17',
+    title: 'Illuminated Path Markers',
+    category: 'Entrance',
+    image: g17,
+    description: 'Solar streetlights highlighting access paths and security checkpoints at dusk.',
+  },
+  {
+    id: 'g-18',
+    title: 'Cozy Farmhouse Veranda',
+    category: 'Farmhouse',
+    image: g18,
+    description: 'Outdoor seating spaces next to organic crops, perfect for relaxation.',
+  },
+  {
+    id: 'g-19',
+    title: 'Drip Grid Irrigation',
+    category: 'Crops',
+    image: g19,
+    description: 'Borewell-connected drip lines running through organic crop rows.',
+  },
+  {
+    id: 'g-20',
+    title: 'Survey Mapped Boundary',
+    category: 'Land',
+    image: g20,
+    description: 'Legally demarcated plot lines ready for registration and handover.',
+  },
+  {
+    id: 'g-21',
+    title: 'Premium Country Cottage',
+    category: 'Farmhouse',
+    image: g21,
+    description: 'A quiet countryside cottage setup built amidst scenic mountain backdrops.',
+  },
+  {
+    id: 'g-22',
+    title: 'SK Farmland Panoramic Acres',
+    category: 'Land',
+    image: g22,
+    description: 'Beautiful elevated view of our green managed farmland layouts.',
   },
 ];

@@ -5,6 +5,7 @@ import { PageId } from '../types';
 import { statsData, incomeGenerators, projectList } from '../data';
 import heroTop from '../assets/hero-top.jpg';
 import heroBottom from '../assets/hero-bottom.jpg';
+import gallery8 from '../assets/gallery-8.jpeg';
 
 interface HomeProps {
   setActivePage: (page: PageId) => void;
@@ -232,7 +233,7 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
           <div ref={natureRef} className="lg:col-span-5 relative">
             <div className="relative rounded-2xl overflow-hidden border border-zinc-900 group h-80">
               <motion.img
-                src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=700&q=80"
+                src={gallery8}
                 alt="Winding path inside premium project"
                 referrerPolicy="no-referrer"
                 style={{ y: natureY }}
