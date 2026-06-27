@@ -23,12 +23,8 @@ export default function Projects({ onBookClick }: ProjectsProps) {
   });
 
   return (
-    <motion.div
+    <div
       id="projects-page-container"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
       className="space-y-10 pb-12 pt-4"
     >
       
@@ -337,6 +333,6 @@ export default function Projects({ onBookClick }: ProjectsProps) {
         </div>
       </section>
 
-    </motion.div>
+    </div>
   );
 }

@@ -45,12 +45,8 @@ export default function ManagedFarmland({ onBookClick }: ManagedFarmlandProps) {
   ];
 
   return (
-    <motion.div
+    <div
       id="managed-page-container"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
       className="space-y-12 pb-12 pt-4"
     >
       
@@ -341,6 +337,6 @@ export default function ManagedFarmland({ onBookClick }: ManagedFarmlandProps) {
         </div>
       </section>
 
-    </motion.div>
+    </div>
   );
 }
