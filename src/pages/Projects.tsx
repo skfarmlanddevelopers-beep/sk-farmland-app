@@ -118,13 +118,33 @@ export default function Projects({ onBookClick }: ProjectsProps) {
             <li className="flex items-start gap-2"><Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> Excellent connectivity to Anekal, Chandapura, Electronic City, Bannerghatta Road, Kanakapura Road, and Hosur.</li>
           </ul>
 
-          <div className="pt-6 flex justify-center">
+          <div className="mt-8 p-6 bg-zinc-950/80 border border-zinc-800 rounded-xl flex flex-col md:flex-row gap-6 justify-between items-center">
+            <div>
+              <h5 className="text-lg font-bold text-white mb-1">Pricing</h5>
+              <p className="text-orange-400 font-semibold text-xl">₹849 per sq. ft. <span className="text-sm text-zinc-500 font-normal">(Slightly Negotiable)</span></p>
+            </div>
+            <div className="text-left md:text-right">
+              <h5 className="text-lg font-bold text-white mb-1">Bank Loan</h5>
+              <p className="text-zinc-400 font-medium">Not Available</p>
+            </div>
+          </div>
+
+          <div className="pt-6 flex flex-col sm:flex-row justify-center gap-4">
             <button
               onClick={() => onBookClick("Project 1")}
-              className="flex items-center gap-2 bg-gradient-to-r from-orange-600 to-amber-500 text-white font-bold uppercase tracking-wider px-8 py-4 rounded-xl hover:from-orange-500 hover:to-amber-400 transition-all shadow-[0_8px_20px_rgba(249,115,22,0.3)] cursor-pointer"
+              className="flex items-center justify-center gap-2 bg-gradient-to-r from-orange-600 to-amber-500 text-white font-bold uppercase tracking-wider px-8 py-4 rounded-xl hover:from-orange-500 hover:to-amber-400 transition-all shadow-[0_8px_20px_rgba(249,115,22,0.3)] cursor-pointer"
             >
               <Calendar size={18} />
-              Book Free Site Visit for Project 1
+              Book Free Site Visit
+            </button>
+            <button
+              onClick={() => {
+                const message = encodeURIComponent('Hi SK Farmland Developers, I am interested in getting the price details for "Project 1". Please share the pricing information.');
+                window.open(`https://wa.me/919900078600?text=${message}`, '_blank');
+              }}
+              className="flex items-center justify-center gap-2 bg-[#14532d] hover:bg-[#166534] text-white font-bold uppercase tracking-wider px-8 py-4 rounded-xl transition-all shadow-[0_8px_20px_rgba(20,83,45,0.3)] cursor-pointer border border-emerald-800/30"
+            >
+              Get Price on WhatsApp →
             </button>
           </div>
         </div>

@@ -48,7 +48,7 @@ export default function Navbar({ activePage, setActivePage, onBookClick }: Navba
             onClick={() => handleNavClick('home')}
             className="cursor-pointer group flex items-center"
           >
-            <Logo className="w-13 h-13" showText={true} />
+            <Logo className="w-13 h-13" showText={true} centerText={true} />
           </div>
 
           {/* Desktop Navigation */}

@@ -81,7 +81,7 @@ export default function BookVisitModal({ isOpen, onClose, preSelectedProject = '
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: 'spring', duration: 0.5 }}
-            className="relative w-full max-w-lg bg-[#0E0E0E] border border-orange-500/20 rounded-2xl overflow-hidden shadow-[0_10px_50px_rgba(249,115,22,0.15)] z-10"
+            className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto overflow-x-hidden bg-[#0E0E0E] border border-orange-500/20 rounded-2xl shadow-[0_10px_50px_rgba(249,115,22,0.15)] z-10"
           >
             {/* Top decorative gradient border */}
             <div className="h-1.5 bg-gradient-to-r from-orange-600 via-amber-500 to-orange-500" />
@@ -89,10 +89,10 @@ export default function BookVisitModal({ isOpen, onClose, preSelectedProject = '
             {/* Close Button */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 text-zinc-400 hover:text-orange-500 p-1.5 rounded-full hover:bg-zinc-900 transition-all"
+              className="absolute top-4 right-4 text-zinc-400 hover:text-white bg-zinc-900 border border-zinc-800 hover:border-orange-500 hover:bg-black p-2 rounded-full transition-all z-20"
               aria-label="Close modal"
             >
-              <X size={18} />
+              <X size={20} />
             </button>
 
             {!isSuccess ? (
@@ -112,39 +112,42 @@ export default function BookVisitModal({ isOpen, onClose, preSelectedProject = '
 
                 {/* Form Fields */}
                 <div className="space-y-4">
-                  {/* Name Input */}
-                  <div>
-                    <label className="block text-xs font-medium text-zinc-300 mb-1.5">Name *</label>
-                    <div className="relative">
-                      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500">
-                        <User size={15} />
-                      </span>
-                      <input
-                        type="text"
-                        required
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        placeholder="Enter your name"
-                        className="w-full bg-[#161616] border border-zinc-800 focus:border-orange-500 text-zinc-100 rounded-lg py-2.5 pl-10 pr-4 text-sm outline-none transition-all"
-                      />
+                  {/* Name and Phone Row */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Name Input */}
+                    <div>
+                      <label className="block text-xs font-medium text-zinc-300 mb-1.5">Name *</label>
+                      <div className="relative">
+                        <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500">
+                          <User size={15} />
+                        </span>
+                        <input
+                          type="text"
+                          required
+                          value={formData.name}
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                          placeholder="Enter your name"
+                          className="w-full bg-[#161616] border border-zinc-800 focus:border-orange-500 text-zinc-100 rounded-lg py-2.5 pl-10 pr-4 text-sm outline-none transition-all"
+                        />
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Phone Input */}
-                  <div>
-                    <label className="block text-xs font-medium text-zinc-300 mb-1.5">Phone Number *</label>
-                    <div className="relative">
-                      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500">
-                        <Phone size={15} />
-                      </span>
-                      <input
-                        type="tel"
-                        required
-                        value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        placeholder="Enter phone number"
-                        className="w-full bg-[#161616] border border-zinc-800 focus:border-orange-500 text-zinc-100 rounded-lg py-2.5 pl-10 pr-4 text-sm outline-none transition-all"
-                      />
+                    {/* Phone Input */}
+                    <div>
+                      <label className="block text-xs font-medium text-zinc-300 mb-1.5">Phone Number *</label>
+                      <div className="relative">
+                        <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500">
+                          <Phone size={15} />
+                        </span>
+                        <input
+                          type="tel"
+                          required
+                          value={formData.phone}
+                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                          placeholder="Enter phone number"
+                          className="w-full bg-[#161616] border border-zinc-800 focus:border-orange-500 text-zinc-100 rounded-lg py-2.5 pl-10 pr-4 text-sm outline-none transition-all"
+                        />
+                      </div>
                     </div>
                   </div>
 

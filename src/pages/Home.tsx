@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence, useInView, animate } from 'motion/react';
-import { Leaf, Award, Map, Users, Home as HomeIcon, Check, Calendar } from 'lucide-react';
+import { Leaf, Award, Map, Users, Home as HomeIcon, Check, Calendar, MessageCircle } from 'lucide-react';
 import { PageId } from '../types';
 import { statsData } from '../data';
 import heroTop from '../assets/hero-top.jpg';
@@ -449,13 +449,25 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
               </div>
             </div>
 
-            <button
-              onClick={onBookClick}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 bg-gradient-to-r from-orange-600 to-amber-500 text-white font-bold uppercase tracking-wider text-sm px-8 py-4 rounded-full hover:from-orange-500 hover:to-amber-400 transition-all duration-300 shadow-[0_4px_15px_rgba(249,115,22,0.2)] cursor-pointer"
-            >
-              <Calendar size={16} />
-              Book Free Site Visit
-            </button>
+            <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
+              <button
+                onClick={onBookClick}
+                className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-orange-600 to-amber-500 text-white font-bold uppercase tracking-wider text-sm px-8 py-4 rounded-full hover:from-orange-500 hover:to-amber-400 transition-all duration-300 shadow-[0_4px_15px_rgba(249,115,22,0.2)] cursor-pointer"
+              >
+                <Calendar size={16} />
+                Book Free Site Visit
+              </button>
+              <button
+                onClick={() => {
+                  const message = encodeURIComponent('Hi SK Farmland Developers, I am interested in your projects. Please share more details.');
+                  window.open(`https://wa.me/919900078600?text=${message}`, '_blank');
+                }}
+                className="flex-1 flex items-center justify-center gap-2 bg-[#14532d] hover:bg-[#166534] text-white font-bold uppercase tracking-wider text-sm px-8 py-4 rounded-full transition-all duration-300 shadow-[0_4px_15px_rgba(20,83,45,0.2)] cursor-pointer border border-emerald-800/30"
+              >
+                <MessageCircle size={16} />
+                WhatsApp
+              </button>
+            </div>
           </div>
         </div>
       </motion.section>
@@ -529,6 +541,25 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
                 <h5 className="text-lg font-bold text-white mb-1">Bank Loan</h5>
                 <p className="text-zinc-400 font-medium">Not Available</p>
               </div>
+            </div>
+
+            <div className="pt-6 flex flex-col sm:flex-row justify-center gap-4">
+              <button
+                onClick={() => onBookClick("Project 1")}
+                className="flex items-center justify-center gap-2 bg-gradient-to-r from-orange-600 to-amber-500 text-white font-bold uppercase tracking-wider px-8 py-4 rounded-xl hover:from-orange-500 hover:to-amber-400 transition-all shadow-[0_8px_20px_rgba(249,115,22,0.3)] cursor-pointer"
+              >
+                <Calendar size={18} />
+                Book Free Site Visit
+              </button>
+              <button
+                onClick={() => {
+                  const message = encodeURIComponent('Hi SK Farmland Developers, I am interested in getting the price details for "Project 1". Please share the pricing information.');
+                  window.open(`https://wa.me/919900078600?text=${message}`, '_blank');
+                }}
+                className="flex items-center justify-center gap-2 bg-[#14532d] hover:bg-[#166534] text-white font-bold uppercase tracking-wider px-8 py-4 rounded-xl transition-all shadow-[0_8px_20px_rgba(20,83,45,0.3)] cursor-pointer border border-emerald-800/30"
+              >
+                Get Price on WhatsApp →
+              </button>
             </div>
           </div>
         </div>

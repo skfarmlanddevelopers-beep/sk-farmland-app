@@ -6,9 +6,10 @@ interface LogoProps {
   className?: string;
   showText?: boolean;
   animate?: boolean;
+  centerText?: boolean;
 }
 
-export default function Logo({ className = 'w-16 h-16', showText = true, animate = false }: LogoProps) {
+export default function Logo({ className = 'w-16 h-16', showText = true, animate = false, centerText = false }: LogoProps) {
   // Check if this is the large version used in the Loader
   const isLarge = className.includes('w-60') || className.includes('h-60');
   
@@ -64,7 +65,7 @@ export default function Logo({ className = 'w-16 h-16', showText = true, animate
       {showText && (
         <motion.div
           id="sk-logo-text"
-          className="flex items-center justify-center select-none pt-1"
+          className={`flex items-center justify-center select-none pt-1 ${centerText ? 'absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0' : ''}`}
           initial={{ opacity: 0, x: -8 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, ease: 'easeOut', delay: 0.15 }}
