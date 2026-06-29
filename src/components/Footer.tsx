@@ -105,10 +105,7 @@ export default function Footer({ setActivePage, onBookClick }: FooterProps) {
                 <span className="text-orange-500 mt-0.5">🌱</span>
                 <span>Bannerghatta Road, Kanakapura Road & Hosur</span>
               </li>
-              <li className="flex items-start gap-2">
-                <span className="text-orange-500 mt-0.5">🌱</span>
-                <span>Pondicherry Highway Scenic Corridors</span>
-              </li>
+
             </ul>
           </div>
 

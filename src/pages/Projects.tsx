@@ -75,7 +75,7 @@ export default function Projects({ onBookClick }: ProjectsProps) {
         </p>
       </div>
 
-      <div className="bg-[#090909] border border-zinc-800 rounded-2xl p-6 md:p-10 shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
+      <div className="bg-[#090909] border-2 border-orange-600 rounded-2xl p-6 md:p-10 shadow-[0_8px_30px_rgba(0,0,0,0.5)] hover:border-orange-500 transition-colors">
         <h3 className="text-2xl sm:text-3xl font-bold text-white mb-6">Project 1</h3>
         
         <div className="mb-8">
@@ -83,7 +83,7 @@ export default function Projects({ onBookClick }: ProjectsProps) {
             images={[project1_1, project1_2, project1_3, project1_4, project1_5, project1_6, project1_7, project1_8]}
             labels={Array(8).fill("Project 1")}
             yBounce={[0, 0, 0]}
-            className="!aspect-[21/9] max-h-[500px]"
+            className="!aspect-[16/9] md:!aspect-[16/10] max-h-[700px]"
           />
         </div>
 
@@ -118,7 +118,7 @@ export default function Projects({ onBookClick }: ProjectsProps) {
             <li className="flex items-start gap-2"><Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> Excellent connectivity to Anekal, Chandapura, Electronic City, Bannerghatta Road, Kanakapura Road, and Hosur.</li>
           </ul>
 
-          <div className="mt-8 p-6 bg-zinc-950/80 border border-zinc-800 rounded-xl flex flex-col md:flex-row gap-6 justify-between items-center">
+          <div className="mt-8 p-6 bg-zinc-950/80 border-2 border-orange-600 hover:border-orange-500 transition-colors rounded-xl flex flex-col md:flex-row gap-6 justify-between items-center">
             <div>
               <h5 className="text-lg font-bold text-white mb-1">Pricing</h5>
               <p className="text-orange-400 font-semibold text-xl">₹849 per sq. ft. <span className="text-sm text-zinc-500 font-normal">(Slightly Negotiable)</span></p>

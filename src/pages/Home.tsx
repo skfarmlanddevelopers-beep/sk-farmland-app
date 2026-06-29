@@ -196,7 +196,7 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
         variants={sectionVariants}
         className="relative z-10 px-4"
       >
-        <div className="mx-auto max-w-6xl bg-[#090909] border border-zinc-900 rounded-2xl p-6 md:p-8 shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
+        <div className="mx-auto max-w-6xl bg-[#090909] border-2 border-orange-600 hover:border-orange-500 transition-colors rounded-2xl p-6 md:p-8 shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
           <div className="text-left mb-6">
             <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-orange-500 font-mono">
               Our Legacy in Figures

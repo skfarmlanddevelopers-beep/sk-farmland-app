@@ -11,14 +11,14 @@ export default function MobileContactBar() {
   return (
     <div 
       id="mobile-contact-bar"
-      className="fixed bottom-0 left-0 right-0 z-50 flex h-12 w-full lg:hidden border-t border-zinc-900 shadow-[0_-4px_20px_rgba(0,0,0,0.5)]"
+      className="fixed bottom-0 left-0 right-0 z-50 flex h-10 w-full lg:hidden border-t border-zinc-900 shadow-[0_-4px_20px_rgba(0,0,0,0.5)] bg-black"
     >
       {/* Call Now Button */}
       <a
         href={phoneUrl}
-        className="flex-1 flex items-center justify-center gap-2 bg-amber-500 text-black text-base font-bold uppercase tracking-wider transition-colors duration-300 hover:bg-amber-600 active:bg-amber-700"
+        className="flex-1 flex items-center justify-center gap-2 bg-amber-500 text-black text-sm font-bold uppercase tracking-wider transition-colors duration-300 hover:bg-amber-600 active:bg-amber-700 border border-white"
       >
-        <Phone size={18} className="stroke-[2.5]" />
+        <Phone size={16} className="stroke-[2.5]" />
         Call Now
       </a>
 
@@ -27,10 +27,10 @@ export default function MobileContactBar() {
         href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex-1 flex items-center justify-center gap-2 bg-[#00e676] text-black text-base font-bold uppercase tracking-wider transition-colors duration-300 hover:bg-[#00c965] active:bg-[#00b057]"
+        className="flex-1 flex items-center justify-center gap-2 bg-[#00e676] text-black text-sm font-bold uppercase tracking-wider transition-colors duration-300 hover:bg-[#00c965] active:bg-[#00b057] border border-white border-l-0"
       >
         <svg
-          className="w-5 h-5 fill-current"
+          className="w-4 h-4 fill-current"
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
         >

@@ -103,12 +103,12 @@ export default function YourJourney({ onBookClick }: YourJourneyProps) {
             >
 
               {/* Step indicator bubble */}
-              <div className="flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full bg-[#0A0A0A] border border-zinc-800 text-orange-500 shrink-0 font-bold font-mono text-sm group-hover:border-orange-500/40 transition-all duration-300 z-10 shadow-md">
+              <div className="flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-full bg-[#0A0A0A] border-2 border-orange-600 text-orange-500 shrink-0 font-bold font-mono text-sm group-hover:border-orange-500 transition-all duration-300 z-10 shadow-md">
                 {val.step}
               </div>
 
               {/* Step Card Details */}
-              <div className="bg-[#0A0A0A] border border-zinc-900 hover:border-orange-500/20 rounded-2xl p-5 md:p-6 space-y-3 transition-all duration-300 w-full text-left">
+              <div className="bg-[#0A0A0A] border-2 border-orange-600 hover:border-orange-500 transition-colors rounded-2xl p-5 md:p-6 space-y-3 w-full text-left">
                 <div className="flex items-center gap-3">
                   <span className="p-2 rounded-lg bg-orange-500/5 border border-orange-500/10 text-orange-500">
                     {val.icon}
@@ -131,24 +131,18 @@ export default function YourJourney({ onBookClick }: YourJourneyProps) {
 
       {/* Build Your Future CTA Banner */}
       <section id="journey-cta" className="mx-auto max-w-4xl px-4 text-center">
-        <div className="p-6 rounded-2xl bg-gradient-to-r from-zinc-950 via-[#100C08] to-zinc-950 border border-orange-500/20 space-y-4">
+        <div className="p-6 rounded-2xl bg-gradient-to-r from-zinc-950 via-[#100C08] to-zinc-950 border-2 border-orange-600 hover:border-orange-500 transition-colors space-y-4">
           <span className="text-xs font-bold uppercase tracking-[0.25em] text-orange-500 font-mono">
             🌄 Build Your Future With Us
           </span>
           <h3 className="text-xl font-bold text-white tracking-tight">
             Whether you are looking for a weekend getaway, farmhouse living, or a secure land investment, SK Farmland Developers is here to support your journey.
           </h3>
-          <p className="text-xs text-zinc-300 max-w-xl mx-auto leading-relaxed font-mono flex items-center justify-center gap-1.5 bg-black/45 py-2 px-4 rounded-lg border border-zinc-900">
+          <p className="text-xs text-zinc-300 max-w-xl mx-auto leading-relaxed font-mono flex items-center justify-center gap-1.5 bg-black/45 py-2 px-4 rounded-lg border-2 border-orange-600 hover:border-orange-500 transition-colors">
             <span className="text-orange-500 text-sm">👉</span> Experience the joy of owning your own farmland and creating a lifestyle close to nature.
           </p>
           <div className="pt-2">
-            <button
-              onClick={onBookClick}
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-orange-600 to-amber-500 text-white font-bold uppercase tracking-wider text-xs px-6 py-3.5 rounded-full hover:from-orange-500 hover:to-amber-400 transition-all duration-300 cursor-pointer shadow-md"
-            >
-              <PhoneCall size={13} />
-              📞 Contact us today to start your journey
-            </button>
+
           </div>
         </div>
       </section>

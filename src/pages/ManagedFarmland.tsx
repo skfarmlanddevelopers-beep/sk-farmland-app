@@ -6,43 +6,6 @@ interface ManagedFarmlandProps {
 }
 
 export default function ManagedFarmland({ onBookClick }: ManagedFarmlandProps) {
-  const comparisonRows = [
-    {
-      feature: 'Agronomic Upkeep',
-      managed: '100% Handled (Organic weed control, fertilization, plowing)',
-      plain: 'Self-managed (Must hire local labor)',
-    },
-    {
-      feature: '35 Fruits Plantation',
-      managed: 'Complimentary Included (Mango, Guava, Sapota)',
-      plain: 'Optional (Chargeable per tree sapling)',
-    },
-    {
-      feature: 'Drip Irrigation Network',
-      managed: 'Automated pressure drip integrated to each plant',
-      plain: 'Manual piping needed',
-    },
-    {
-      feature: 'Compound Frontage Fencing',
-      managed: 'High-quality uniform wooden picket fencing & gates',
-      plain: 'Self-installation required',
-    },
-    {
-      feature: 'Water Infrastructure',
-      managed: 'Individual high-pressure connection mapped to corner',
-      plain: 'Shared community borewell outlet access',
-    },
-    {
-      feature: 'Security & Surveillance',
-      managed: '24/7 active gate guards & boundary CCTV surveillance',
-      plain: 'Basic layout security gates only',
-    },
-    {
-      feature: 'Internal Access Infrastructure',
-      managed: 'CC internal roads with solar-powered illumination lines',
-      plain: 'Standard gravel roads and unlit path blocks',
-    },
-  ];
 
   return (
     <motion.div
@@ -52,14 +15,14 @@ export default function ManagedFarmland({ onBookClick }: ManagedFarmlandProps) {
       transition={{ duration: 0.5, ease: 'easeOut' }}
       className="space-y-12 pb-12 pt-4"
     >
-      
+
       {/* Header / Hero section */}
       <section id="managed-hero" className="text-center space-y-4 max-w-3xl mx-auto px-4">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-orange-500/10 rounded-full border border-orange-500/20 text-orange-400 font-mono text-[10px] uppercase tracking-widest">
           <Leaf size={11} />
           🌾 Managed Farmland (Hassle-Free Ownership)
         </div>
-        <motion.h1 
+        <motion.h1
           initial="hidden"
           animate="visible"
           variants={{
@@ -88,7 +51,7 @@ export default function ManagedFarmland({ onBookClick }: ManagedFarmlandProps) {
 
       {/* What is Managed Farmland introduction card */}
       <section id="what-is-managed" className="mx-auto max-w-5xl px-4">
-        <div className="bg-gradient-to-r from-zinc-950 via-[#110E0A] to-zinc-950 border border-orange-500/20 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl text-left">
+        <div className="bg-gradient-to-r from-zinc-950 via-[#110E0A] to-zinc-950 border-2 border-orange-600 hover:border-orange-500 transition-colors rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl text-left">
           <div className="space-y-2">
             <h3 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
               <span className="text-orange-500">🌿</span> What is Managed Farmland?
@@ -115,9 +78,9 @@ export default function ManagedFarmland({ onBookClick }: ManagedFarmlandProps) {
       {/* Main Grid: Development, Facilities & Maintenance */}
       <section id="managed-infrastructure" className="mx-auto max-w-5xl px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          
+
           {/* Column 1: Development & Facilities Provided */}
-          <div className="bg-[#0A0A0A] border border-zinc-900 rounded-2xl p-6 space-y-4">
+          <div className="bg-[#0A0A0A] border-2 border-orange-600 hover:border-orange-500 transition-colors rounded-2xl p-6 space-y-4">
             <h3 className="text-base font-bold text-white tracking-tight flex items-center gap-2 border-b border-zinc-900 pb-3 mb-1">
               <span className="text-orange-500">🛠️</span> Development & Facilities Provided
             </h3>
@@ -142,7 +105,7 @@ export default function ManagedFarmland({ onBookClick }: ManagedFarmlandProps) {
           </div>
 
           {/* Column 2: Maintenance Support */}
-          <div className="bg-[#0A0A0A] border border-zinc-900 rounded-2xl p-6 flex flex-col justify-between space-y-6">
+          <div className="bg-[#0A0A0A] border-2 border-orange-600 hover:border-orange-500 transition-colors rounded-2xl p-6 flex flex-col justify-between space-y-6">
             <div className="space-y-4">
               <h3 className="text-base font-bold text-white tracking-tight flex items-center gap-2 border-b border-zinc-900 pb-3 mb-1">
                 <span className="text-orange-500">🔧</span> Maintenance Support
@@ -164,7 +127,7 @@ export default function ManagedFarmland({ onBookClick }: ManagedFarmlandProps) {
             </div>
 
             {/* Note indicator */}
-            <div className="flex items-start gap-2.5 bg-zinc-950 p-4 rounded-xl border border-zinc-900 text-[10px] text-zinc-500 leading-relaxed font-mono">
+            <div className="flex items-start gap-2.5 bg-zinc-950 p-4 rounded-xl border-2 border-orange-600 hover:border-orange-500 transition-colors text-[10px] text-zinc-500 leading-relaxed font-mono">
               <Info size={12} className="text-orange-500/60 shrink-0 mt-0.5" />
               <span>Guidelines regarding registration are shared transparently prior to sale agreement executions.</span>
             </div>
@@ -176,9 +139,9 @@ export default function ManagedFarmland({ onBookClick }: ManagedFarmlandProps) {
       {/* Main Grid: Additional Charges & Usage Benefits */}
       <section id="charges-and-usage" className="mx-auto max-w-5xl px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          
+
           {/* Column 1: Additional Charges (If Required) */}
-          <div className="bg-[#0A0A0A] border border-zinc-900 rounded-2xl p-6 space-y-4">
+          <div className="bg-[#0A0A0A] border-2 border-orange-600 hover:border-orange-500 transition-colors rounded-2xl p-6 space-y-4">
             <h3 className="text-base font-bold text-white tracking-tight flex items-center gap-2 border-b border-zinc-900 pb-3 mb-1">
               <span className="text-orange-500">⚠️</span> Additional Charges (If Required)
             </h3>
@@ -199,7 +162,7 @@ export default function ManagedFarmland({ onBookClick }: ManagedFarmlandProps) {
           </div>
 
           {/* Column 2: Usage & Benefits */}
-          <div className="bg-[#0A0A0A] border border-zinc-900 rounded-2xl p-6 space-y-4">
+          <div className="bg-[#0A0A0A] border-2 border-orange-600 hover:border-orange-500 transition-colors rounded-2xl p-6 space-y-4">
             <h3 className="text-base font-bold text-white tracking-tight flex items-center gap-2 border-b border-zinc-900 pb-3 mb-1">
               <span className="text-orange-500">🌱</span> Usage & Benefits
             </h3>
@@ -225,9 +188,9 @@ export default function ManagedFarmland({ onBookClick }: ManagedFarmlandProps) {
       {/* Main Grid: Income Opportunity & Why Choose */}
       <section id="income-and-reasons" className="mx-auto max-w-5xl px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          
+
           {/* Column 1: Income Opportunity */}
-          <div className="bg-[#0A0A0A] border border-zinc-900 rounded-2xl p-6 space-y-4">
+          <div className="bg-[#0A0A0A] border-2 border-orange-600 hover:border-orange-500 transition-colors rounded-2xl p-6 space-y-4">
             <h3 className="text-base font-bold text-white tracking-tight flex items-center gap-2 border-b border-zinc-900 pb-3 mb-1">
               <span className="text-orange-500">💰</span> Income Opportunity
             </h3>
@@ -250,7 +213,7 @@ export default function ManagedFarmland({ onBookClick }: ManagedFarmlandProps) {
           </div>
 
           {/* Column 2: Why Choose Managed Farmland? */}
-          <div className="bg-[#0A0A0A] border border-zinc-900 rounded-2xl p-6 space-y-4">
+          <div className="bg-[#0A0A0A] border-2 border-orange-600 hover:border-orange-500 transition-colors rounded-2xl p-6 space-y-4">
             <h3 className="text-base font-bold text-white tracking-tight flex items-center gap-2 border-b border-zinc-900 pb-3 mb-1">
               <span className="text-orange-500">🧘‍♂️</span> Why Choose Managed Farmland?
             </h3>
@@ -275,54 +238,10 @@ export default function ManagedFarmland({ onBookClick }: ManagedFarmlandProps) {
         </div>
       </section>
 
-      {/* Interactive Side-By-Side Comparison Matrix */}
-      <section id="managed-vs-plain" className="mx-auto max-w-5xl px-4 space-y-6">
-        
-        <div className="text-center space-y-2">
-          <span className="text-xs font-bold uppercase tracking-[0.25em] text-orange-500 font-mono">
-            ⚖ Make Your Decision
-          </span>
-          <h2 className="text-2xl font-bold text-white tracking-tight">
-            Managed vs. Plain Farmland Matrix
-          </h2>
-          <p className="text-xs sm:text-sm text-zinc-400 max-w-xl mx-auto">
-            Review how our standard managed layout options compare directly to standard private land blocks.
-          </p>
-        </div>
-
-        {/* Elegant Table container */}
-        <div className="overflow-x-auto rounded-2xl border border-zinc-900 bg-black shadow-lg">
-          <table className="w-full text-left border-collapse min-w-[600px]">
-            <thead>
-              <tr className="bg-[#090909] border-b border-zinc-900 text-[10px] md:text-xs font-bold uppercase tracking-wider text-white">
-                <th className="py-4.5 px-6 font-mono">Key Features</th>
-                <th className="py-4.5 px-6 font-mono text-orange-400 bg-orange-500/5 border-x border-zinc-900">
-                  🌾 Managed Farmland Option
-                </th>
-                <th className="py-4.5 px-6 font-mono text-zinc-400">🌿 Plain Farmland Option</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-zinc-900 text-xs">
-              {comparisonRows.map((row, idx) => (
-                <tr key={idx} className="hover:bg-zinc-950/40 transition-colors">
-                  <td className="py-4 px-6 font-semibold text-zinc-300">{row.feature}</td>
-                  <td className="py-4 px-6 text-zinc-200 bg-orange-500/[0.02] border-x border-zinc-900/60 font-medium">
-                    <span className="inline-flex items-center gap-1.5 text-orange-400">
-                      <span className="text-xs">✦</span>
-                      {row.managed}
-                    </span>
-                  </td>
-                  <td className="py-4 px-6 text-zinc-400">{row.plain}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
 
       {/* Start Your Hassle-Free Journey CTA */}
-      <section id="managed-cta" className="mx-auto max-w-4xl px-4 text-center">
-        <div className="p-6 rounded-2xl bg-zinc-950 border border-zinc-900 space-y-4">
+      <section id="managed-cta" className="mx-auto max-w-4xl px-4 text-center mt-8">
+        <div className="p-6 rounded-2xl bg-zinc-950 border-2 border-orange-600 hover:border-orange-500 transition-colors space-y-4">
           <span className="text-xs font-bold uppercase tracking-[0.25em] text-orange-500 font-mono">
             📍 Start Your Hassle-Free Journey
           </span>
@@ -330,16 +249,10 @@ export default function ManagedFarmland({ onBookClick }: ManagedFarmlandProps) {
           <p className="text-xs text-zinc-400 leading-relaxed max-w-xl mx-auto">
             Book a weekend site visit today. Our legal advocates, soil specialists, and layout engineers are present on-site to walk you through plots and answer legal/taxation queries.
           </p>
-          <button
-            onClick={onBookClick}
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-orange-600 to-amber-500 text-white font-bold uppercase tracking-wider text-xs px-6 py-3.5 rounded-full hover:from-orange-500 hover:to-amber-400 transition-all duration-300 cursor-pointer shadow-md"
-          >
-            <Calendar size={13} />
-            Schedule Managed Farmland Visit
-          </button>
+
         </div>
       </section>
 
-     </motion.div>
+    </motion.div>
   );
 }

@@ -109,7 +109,7 @@ export default function App() {
                 <Testimonials setActivePage={setActivePage} />
               )}
               {(activePage === 'terms' || activePage === 'privacy' || activePage === 'disclaimer') && (
-                <LegalPages activePage={activePage} setActivePage={setActivePage} />
+                <LegalPages viewType={activePage} />
               )}
             </div>
           </main>

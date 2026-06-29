@@ -38,13 +38,7 @@ function ParallaxGalleryImage({ src, alt }: { src: string; alt: string }) {
 }
 
 export default function Gallery({ onBookClick }: GalleryProps) {
-  const [filter, setFilter] = useState<'All' | 'Land' | 'Farmhouse' | 'Crops' | 'Entrance'>('All');
   const [selectedImage, setSelectedImage] = useState<GalleryItem | null>(null);
-
-  const filteredItems = galleryData.filter((item) => {
-    if (filter === 'All') return true;
-    return item.category === filter;
-  });
 
   return (
     <motion.div
@@ -69,29 +63,12 @@ export default function Gallery({ onBookClick }: GalleryProps) {
         </p>
       </section>
 
-      {/* Category filters */}
       <section id="gallery-grid-wrapper" className="mx-auto max-w-5xl px-4 space-y-6">
         
-        <div className="flex flex-wrap items-center justify-center gap-2">
-          {(['All', 'Land', 'Farmhouse', 'Crops', 'Entrance'] as const).map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setFilter(cat)}
-              className={`px-4.5 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 border cursor-pointer ${
-                filter === cat
-                  ? 'bg-orange-600 border-orange-600 text-white'
-                  : 'bg-[#0E0E0E] border-zinc-900 text-zinc-400 hover:text-white hover:border-zinc-800'
-              }`}
-            >
-              {cat === 'All' ? 'All Images' : cat}
-            </button>
-          ))}
-        </div>
-
         {/* Gallery Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <AnimatePresence mode="popLayout">
-            {filteredItems.map((item: GalleryItem) => (
+            {galleryData.map((item: GalleryItem) => (
               <motion.div
                 key={item.id}
                 layout
@@ -99,7 +76,7 @@ export default function Gallery({ onBookClick }: GalleryProps) {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.3 }}
-                className="group relative bg-[#090909] border border-zinc-900 rounded-xl overflow-hidden cursor-pointer"
+                className="group relative bg-[#090909] border-2 border-orange-600 hover:border-orange-500 transition-colors rounded-xl overflow-hidden cursor-pointer"
                 onClick={() => setSelectedImage(item)}
               >
                 {/* Image Box with Parallax */}
@@ -108,14 +85,7 @@ export default function Gallery({ onBookClick }: GalleryProps) {
                   alt={item.title}
                 />
 
-                {/* Info Overlay Panel */}
-                <div className="p-4 space-y-1">
-                  <span className="text-[9px] uppercase font-bold tracking-widest text-orange-400 font-mono">
-                    {item.category}
-                  </span>
-                  <h3 className="text-sm font-bold text-white tracking-tight">{item.title}</h3>
-                  <p className="text-[11px] text-zinc-400 leading-relaxed truncate">{item.description}</p>
-                </div>
+
               </motion.div>
             ))}
           </AnimatePresence>
@@ -219,7 +189,7 @@ export default function Gallery({ onBookClick }: GalleryProps) {
 
       {/* Guided Tour Banner */}
       <section id="gallery-cta" className="mx-auto max-w-4xl px-4 text-center">
-        <div className="p-6 rounded-2xl bg-zinc-950 border border-zinc-900 space-y-4">
+        <div className="p-6 rounded-2xl bg-zinc-950 border-2 border-orange-600 hover:border-orange-500 transition-colors space-y-4">
           <span className="text-[10px] font-bold uppercase tracking-widest text-orange-500 font-mono flex items-center justify-center gap-1">
             <Sparkles size={11} className="animate-pulse" />
             See It with Your Own Eyes

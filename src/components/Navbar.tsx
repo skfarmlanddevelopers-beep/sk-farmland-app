@@ -85,7 +85,7 @@ export default function Navbar({ activePage, setActivePage, onBookClick }: Navba
                   {isActive && (
                     <motion.div
                       layoutId="activeTabCapsule"
-                      className="absolute inset-0 rounded-lg bg-orange-500/5 border border-orange-500/20 z-0 shadow-[0_0_15px_rgba(249,115,22,0.05)]"
+                      className="absolute inset-0 rounded-lg bg-orange-500/5 border-2 border-orange-600 z-0 shadow-[0_0_15px_rgba(249,115,22,0.05)]"
                       transition={{ type: 'spring', stiffness: 350, damping: 25 }}
                     />
                   )}
