@@ -55,7 +55,7 @@ export default function Contact({ onBookClick }: ContactProps) {
 
       {/* Header */}
       <section id="contact-hero" className="text-center space-y-4 max-w-3xl mx-auto px-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-orange-500/10 rounded-full border border-orange-500/20 text-orange-400 font-mono text-[10px] uppercase tracking-widest">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-orange-500/10 rounded-full border border-white text-white font-mono text-[10px] uppercase tracking-widest">
           <Calendar size={11} className="animate-pulse" />
           Get in Touch
         </div>

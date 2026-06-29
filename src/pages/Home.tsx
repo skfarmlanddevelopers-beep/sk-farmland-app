@@ -435,12 +435,12 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-orange-500 font-mono mb-4">
               📍 Start Your Journey Today
             </span>
-            <div className="space-y-4 w-full max-w-sm flex flex-col items-center">
+            <div className="space-y-4 flex flex-col items-start mx-auto w-fit">
               <div className="flex items-center gap-3 text-white text-sm md:text-base font-semibold">
-                <span className="text-orange-500">👉</span> Explore our projects
+                <span className="text-orange-500 shrink-0">👉</span> <span>Explore our projects</span>
               </div>
-              <div className="flex items-center gap-3 text-white text-sm md:text-base font-semibold text-left">
-                <span className="text-orange-500">👉</span> Choose the farmland that suits your needs
+              <div className="flex items-center gap-3 text-white text-sm md:text-base font-semibold">
+                <span className="text-orange-500 shrink-0">👉</span> <span>Choose the farmland that suits your needs</span>
               </div>
             </div>
 
