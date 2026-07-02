@@ -1,27 +1,51 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { LayoutDashboard, FolderKanban, Image as ImageIcon, Users, Settings, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, FolderKanban, Image as ImageIcon, Users, Settings, LogOut, Menu, X, Monitor } from 'lucide-react';
 import { PageId } from '../../types';
+import HeroImagesManager from './HeroImagesManager';
+import GalleryManager from './GalleryManager';
+import LeadsViewer from './LeadsViewer';
+import ProjectsManager from './ProjectsManager';
+import SiteVisitsViewer from './SiteVisitsViewer';
 
 interface AdminDashboardProps {
   setActivePage: (page: PageId) => void;
 }
 
-type TabId = 'dashboard' | 'projects' | 'gallery' | 'leads' | 'settings';
+type TabId = 'dashboard' | 'projects' | 'gallery' | 'leads' | 'site-visits' | 'settings' | 'hero-images';
 
 export default function AdminDashboard({ setActivePage }: AdminDashboardProps) {
   const [activeTab, setActiveTab] = useState<TabId>('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [stats, setStats] = useState({ projects: 0, leads: 0, gallery: 0, siteVisits: 0 });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await fetch('/api/stats');
+        if (response.ok) {
+          const data = await response.json();
+          setStats(data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch stats:', err);
+      }
+    };
+    fetchStats();
+  }, [activeTab]); // Refetch stats when switching tabs
 
   const tabs = [
     { id: 'dashboard', label: 'Dashboard Home', icon: LayoutDashboard },
     { id: 'projects', label: 'Manage Projects', icon: FolderKanban },
     { id: 'gallery', label: 'Manage Gallery', icon: ImageIcon },
     { id: 'leads', label: 'View Leads', icon: Users },
+    { id: 'site-visits', label: 'Site Visits', icon: Monitor }, // Using monitor icon for now
+    { id: 'hero-images', label: 'Hero Images', icon: Monitor },
     { id: 'settings', label: 'Settings', icon: Settings },
   ] as const;
 
   const handleLogout = () => {
+    sessionStorage.removeItem('sk_admin_auth');
     setActivePage('home');
   };
 
@@ -31,49 +55,36 @@ export default function AdminDashboard({ setActivePage }: AdminDashboardProps) {
         return (
           <div className="space-y-6">
             <h2 className="text-2xl font-bold text-white">Welcome, Admin</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-xl">
                 <h3 className="text-zinc-400 text-sm font-medium mb-2">Total Projects</h3>
-                <p className="text-3xl font-bold text-white">5</p>
+                <p className="text-3xl font-bold text-white">{stats.projects}</p>
               </div>
               <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-xl">
                 <h3 className="text-zinc-400 text-sm font-medium mb-2">Total Leads</h3>
-                <p className="text-3xl font-bold text-white">12</p>
+                <p className="text-3xl font-bold text-white">{stats.leads}</p>
               </div>
               <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-xl">
                 <h3 className="text-zinc-400 text-sm font-medium mb-2">Gallery Images</h3>
-                <p className="text-3xl font-bold text-white">22</p>
+                <p className="text-3xl font-bold text-white">{stats.gallery}</p>
+              </div>
+              <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-xl border-l-4 border-l-orange-500">
+                <h3 className="text-zinc-400 text-sm font-medium mb-2">Site Visits</h3>
+                <p className="text-3xl font-bold text-white">{stats.siteVisits}</p>
               </div>
             </div>
           </div>
         );
       case 'projects':
-        return (
-          <div>
-            <h2 className="text-2xl font-bold text-white mb-6">Manage Projects</h2>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-8 text-center text-zinc-500">
-              Project management features coming soon.
-            </div>
-          </div>
-        );
+        return <ProjectsManager />;
       case 'gallery':
-        return (
-          <div>
-            <h2 className="text-2xl font-bold text-white mb-6">Manage Gallery</h2>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-8 text-center text-zinc-500">
-              Gallery management features coming soon.
-            </div>
-          </div>
-        );
+        return <GalleryManager />;
       case 'leads':
-        return (
-          <div>
-            <h2 className="text-2xl font-bold text-white mb-6">View Leads</h2>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-8 text-center text-zinc-500">
-              Lead viewing features coming soon.
-            </div>
-          </div>
-        );
+        return <LeadsViewer />;
+      case 'site-visits':
+        return <SiteVisitsViewer />;
+      case 'hero-images':
+        return <HeroImagesManager />;
       case 'settings':
         return (
           <div>

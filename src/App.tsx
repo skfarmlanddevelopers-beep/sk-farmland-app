@@ -44,7 +44,12 @@ export default function App() {
   // Support for /?admin URL
   useEffect(() => {
     if (window.location.search.includes('admin') || window.location.pathname.includes('admin')) {
-      setActivePage('adminLogin');
+      const isAuthenticated = sessionStorage.getItem('sk_admin_auth') === 'true';
+      if (isAuthenticated) {
+        setActivePage('adminDashboard');
+      } else {
+        setActivePage('adminLogin');
+      }
     }
   }, []);
 

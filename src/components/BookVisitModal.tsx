@@ -24,7 +24,7 @@ export default function BookVisitModal({ isOpen, onClose, preSelectedProject = '
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.phone) {
       alert('Please fill out your Name and Phone Number.');
@@ -32,18 +32,26 @@ export default function BookVisitModal({ isOpen, onClose, preSelectedProject = '
     }
 
     setIsSubmitting(true);
-    // Simulate API request to backend
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSuccess(true);
-      // Persist submission locally in localStorage as a backup
-      try {
-        const existingLeads = JSON.parse(localStorage.getItem('sk_leads') || '[]');
-        localStorage.setItem('sk_leads', JSON.stringify([...existingLeads, { ...formData, timestamp: new Date().toISOString() }]));
-      } catch (e) {
-        console.error('Failed to save lead', e);
+    try {
+      const response = await fetch('/api/site-visits', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setIsSuccess(true);
+      } else {
+        alert('Failed to submit request. Please try again.');
       }
-    }, 1500);
+    } catch (e) {
+      console.error('Failed to submit request', e);
+      alert('An error occurred. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleReset = () => {

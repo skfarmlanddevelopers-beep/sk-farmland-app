@@ -16,6 +16,7 @@ export default function AdminLogin({ setActivePage }: AdminLoginProps) {
     e.preventDefault();
     // Mock Authentication for Phase 1
     if (username === 'admin' && password === 'password123') {
+      sessionStorage.setItem('sk_admin_auth', 'true');
       setActivePage('adminDashboard');
     } else {
       setError('Invalid username or password');

@@ -19,8 +19,9 @@ export default function Contact({ onBookClick }: ContactProps) {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [submittedData, setSubmittedData] = useState<{ name: string, phone: string } | null>(null);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.phone) {
       alert('Please enter your Name and Mobile Number.');
@@ -28,20 +29,38 @@ export default function Contact({ onBookClick }: ContactProps) {
     }
 
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSuccess(true);
-      // Log submission backup
-      try {
-        const contactQueries = JSON.parse(localStorage.getItem('sk_contacts') || '[]');
-        localStorage.setItem(
-          'sk_contacts',
-          JSON.stringify([...contactQueries, { ...formData, timestamp: new Date().toISOString() }])
-        );
-      } catch (e) {
-        console.error('Failed to save contact query', e);
-      }
-    }, 1200);
+
+    try {
+      // 1. Send data to backend to store in leads table
+      await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+    } catch (e) {
+      console.error('Failed to save lead', e);
+    }
+
+    // 2. Format message for WhatsApp
+    const whatsappMessage = `Hi SK Farmland, I am ${formData.name}. I am interested in ${formData.interest} with a budget of ${formData.budget}. My phone is ${formData.phone}${formData.email ? ' and email is ' + formData.email : ''}.`;
+    const whatsappUrl = `https://wa.me/917411131002?text=${encodeURIComponent(whatsappMessage)}`;
+
+    setSubmittedData({ name: formData.name, phone: formData.phone });
+
+    setFormData({
+      name: '',
+      phone: '',
+      email: '',
+      interest: 'Managed Farmland (Hassle-Free Option)',
+      budget: '₹40–60 Lakhs',
+      notes: '',
+    });
+
+    setIsSubmitting(false);
+    setIsSuccess(true);
+
+    // 3. Open WhatsApp link
+    window.open(whatsappUrl, '_blank');
   };
 
   return (
@@ -82,7 +101,7 @@ export default function Contact({ onBookClick }: ContactProps) {
           ))}
         </motion.h1>
         <p className="text-sm text-zinc-400 leading-relaxed max-w-2xl mx-auto">
-          Looking to own farmland near Bangalore? Our team is here to guide you at every step—from selecting the right plot to booking your site visit. We’ll help you choose the best option based on your budget and requirements.
+          Looking to own farmland near Bangalore? Our team is here to guide you at every step—from selecting the right plot  We’ll help you choose the best option based on your budget and requirements.
         </p>
       </section>
 
@@ -188,11 +207,11 @@ export default function Contact({ onBookClick }: ContactProps) {
 
                 <h3 className="text-xl font-bold text-white">Inquiry Received Safely!</h3>
                 <p className="text-xs text-zinc-400 max-w-sm mx-auto leading-relaxed">
-                  Thank you, <strong className="text-orange-400">{formData.name}</strong>. Your custom inquiry has been logged in our databases.
+                  Thank you, <strong className="text-orange-400">{submittedData?.name}</strong>. Your custom inquiry has been logged in our databases.
                 </p>
 
                 <div className="p-4 bg-zinc-950 rounded-xl border border-zinc-900 text-xs text-zinc-400 max-w-sm mx-auto leading-relaxed">
-                  📞 An experienced agronomist coordinator will call you back at <strong>{formData.phone}</strong> within 2 hours to walk you through layout schedules.
+                  📞 An experienced agronomist coordinator will call you back at <strong>{submittedData?.phone}</strong> within 2 hours to walk you through layout schedules.
                 </div>
 
                 <button

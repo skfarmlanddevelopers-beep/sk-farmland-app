@@ -115,6 +115,61 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
     offset: ["start start", "end start"]
   });
 
+  const [dynamicLeftImages, setDynamicLeftImages] = useState<string[]>([]);
+  const [dynamicRightImages, setDynamicRightImages] = useState<string[]>([]);
+  const [dynamicProjects, setDynamicProjects] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchHeroImages = async () => {
+      try {
+        const response = await fetch('/api/hero-images');
+        if (response.ok) {
+          const data = await response.json();
+          const lefts = data.filter((img: any) => img.side === 'left').map((img: any) => img.image_path);
+          const rights = data.filter((img: any) => img.side === 'right').map((img: any) => img.image_path);
+          setDynamicLeftImages(lefts);
+          setDynamicRightImages(rights);
+        }
+      } catch (err) {
+        console.error('Failed to fetch dynamic hero images:', err);
+      }
+    };
+    
+    const fetchProjects = async () => {
+      try {
+        const response = await fetch('/api/projects');
+        if (response.ok) {
+          const data = await response.json();
+          // Parse JSON fields
+          const formattedData = data.map((proj: any) => ({
+            ...proj,
+            images: typeof proj.images === 'string' ? JSON.parse(proj.images) : proj.images,
+            highlights: typeof proj.highlights === 'string' ? JSON.parse(proj.highlights) : proj.highlights,
+          }));
+          setDynamicProjects(formattedData);
+        }
+      } catch (err) {
+        console.error('Failed to fetch projects:', err);
+      }
+    };
+
+    fetchHeroImages();
+    fetchProjects();
+  }, []);
+
+
+  const defaultLeftImages = [customHeroLeft, hero1_1, hero1_2, hero1_3, hero1_4, hero1_5, hero1_6];
+  const defaultLeftLabels = ["SK Farmland Community", "Gated Entry Plaza", "Premium Infrastructure", "Secure Boundary", "Eco-Friendly Design", "Scenic View", "Lush Greenery"];
+  
+  const finalLeftImages = dynamicLeftImages.length > 0 ? [...dynamicLeftImages, ...defaultLeftImages] : defaultLeftImages;
+  const finalLeftLabels = dynamicLeftImages.length > 0 ? [...Array(dynamicLeftImages.length).fill("SK Farmland Community"), ...defaultLeftLabels] : defaultLeftLabels;
+
+  const defaultRightImages = [customHeroRight, hero1_7, hero1_8, hero1_9, hero1_10, hero1_11];
+  const defaultRightLabels = ["Premium Lifestyle", "Scenic Resort Community", "Lush Organic Farm", "Clubhouse & Amenities", "Serene Living Spaces", "Nature Living"];
+
+  const finalRightImages = dynamicRightImages.length > 0 ? [...dynamicRightImages, ...defaultRightImages] : defaultRightImages;
+  const finalRightLabels = dynamicRightImages.length > 0 ? [...Array(dynamicRightImages.length).fill("Premium Lifestyle"), ...defaultRightLabels] : defaultRightLabels;
+
   // Animation presets
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -170,8 +225,8 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
 
           {/* Top Hero Image Column: Infrastructure Carousel */}
           <HeroCarousel
-            images={[customHeroLeft, hero1_1, hero1_2, hero1_3, hero1_4, hero1_5, hero1_6]}
-            labels={["SK Farmland Community", "Gated Entry Plaza", "Premium Infrastructure", "Secure Boundary", "Eco-Friendly Design", "Scenic View", "Lush Greenery"]}
+            images={finalLeftImages}
+            labels={finalLeftLabels}
             yBounce={[0, -6, 0]}
           >
 
@@ -179,8 +234,8 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
 
           {/* Bottom Hero Image Column: Scenic/Community Carousel */}
           <HeroCarousel
-            images={[customHeroRight, hero1_7, hero1_8, hero1_9, hero1_10, hero1_11]}
-            labels={["Premium Lifestyle", "Scenic Resort Community", "Lush Organic Farm", "Clubhouse & Amenities", "Serene Living Spaces", "Nature Living"]}
+            images={finalRightImages}
+            labels={finalRightLabels}
             yBounce={[0, 6, 0]}
           />
 
@@ -466,63 +521,108 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
           </p>
         </div>
 
-        <div className="bg-[#090909] border-2 border-orange-600 rounded-2xl p-6 md:p-10 shadow-[0_8px_30px_rgba(0,0,0,0.5)] hover:border-orange-500 transition-colors">
-          <h3 className="text-2xl sm:text-3xl font-bold text-white mb-6">Project 1</h3>
-
-          <div className="mb-8">
-            <HeroCarousel
-              images={[project1_1, project1_2, project1_3, project1_4, project1_5, project1_6, project1_7, project1_8]}
-              labels={Array(8).fill("Project 1")}
-              yBounce={[0, 0, 0]}
-              className="!aspect-[16/9] md:!aspect-[16/10] max-h-[700px]"
-            />
-          </div>
-
-          <div className="space-y-6">
-            <h4 className="text-xl font-bold text-orange-500 flex items-center gap-2">
-              🌿 Project Highlights
-            </h4>
-
-            <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm md:text-base text-zinc-300">
-              <li className="flex items-start gap-2"><Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> 350 Acres of premium farmland with 550 plots available in various sizes.</li>
-              <li className="flex items-start gap-2"><Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> Grand entrance arch with an elegant main gate.</li>
-              <li className="flex items-start gap-2"><Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> 24×7 security for a safe and secure environment.</li>
-              <li className="flex items-start gap-2"><Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> Individual water connection provided to every plot.</li>
-              <li className="flex items-start gap-2"><Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> Wide cement concrete main roads and well-laid internal roads.</li>
-              <li className="flex items-start gap-2"><Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> Street lighting throughout the project.</li>
-              <li className="flex items-start gap-2"><Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> Front picket compound fencing provided for every plot.</li>
-              <li className="flex items-start gap-2"><Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" />
-                <div>
-                  <span className="font-semibold text-white">4-Acre Clubhouse featuring:</span>
-                  <ul className="ml-4 mt-2 space-y-1 text-zinc-400">
-                    <li>• Indoor &amp; outdoor games</li>
-                    <li>• Horse riding</li>
-                    <li>• Restaurant</li>
-                    <li>• Temple and peaceful meditation hall.</li>
-                  </ul>
+        {dynamicProjects.length > 0 ? (
+          dynamicProjects.map((project) => (
+            <div key={project.id} className="bg-[#090909] border-2 border-orange-600 rounded-2xl p-6 md:p-10 shadow-[0_8px_30px_rgba(0,0,0,0.5)] hover:border-orange-500 transition-colors mt-6">
+              <h3 className="text-2xl sm:text-3xl font-bold text-white mb-6">{project.name}</h3>
+              
+              {project.images && project.images.length > 0 && (
+                <div className="mb-8">
+                  <HeroCarousel
+                    images={project.images}
+                    labels={Array(project.images.length).fill(project.name)}
+                    yBounce={[0, 0, 0]}
+                    className="!aspect-[16/9] md:!aspect-[16/10] max-h-[700px]"
+                  />
                 </div>
-              </li>
-              <li className="flex items-start gap-2"><Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> Plantation of 40+ varieties of trees, including Mango, Sapota, Jackfruit, Coconut, Teak, Silver Oak, and more.</li>
-              <li className="flex items-start gap-2"><Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> Organic farming guidance and support to help you cultivate your own produce.</li>
-              <li className="flex items-start gap-2"><Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> Close to popular tourist attractions like Muthyala Maduvu Waterfalls (Pearl Valley) and Pearl Valley Dam.</li>
-              <li className="flex items-start gap-2"><Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> Peaceful environment surrounded by beautiful mountain views.</li>
-              <li className="flex items-start gap-2"><Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> Excellent connectivity to Anekal, Chandapura, Electronic City, Bannerghatta Road, Kanakapura Road, and Hosur.</li>
-            </ul>
-
-            <div className="mt-8 p-6 bg-zinc-950/80 border border-zinc-800 rounded-xl flex flex-col md:flex-row gap-6 justify-between items-center">
-              <div>
-                <h5 className="text-lg font-bold text-white mb-1">Pricing</h5>
-                <p className="text-orange-400 font-semibold text-xl">₹849 per sq. ft. <span className="text-sm text-zinc-500 font-normal">(Slightly Negotiable)</span></p>
-              </div>
-              <div className="text-left md:text-right">
-                <h5 className="text-lg font-bold text-white mb-1">Bank Loan</h5>
-                <p className="text-zinc-400 font-medium">Not Available</p>
+              )}
+  
+              <div className="space-y-6">
+                <h4 className="text-xl font-bold text-orange-500 flex items-center gap-2">
+                  🌿 Project Highlights
+                </h4>
+                
+                <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm md:text-base text-zinc-300">
+                  {project.highlights && project.highlights.map((highlight: string, i: number) => (
+                    <li key={i} className="flex items-start gap-2">
+                      <Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> 
+                      <span>{highlight}</span>
+                    </li>
+                  ))}
+                </ul>
+  
+                <div className="mt-8 p-6 bg-zinc-950/80 border border-zinc-800 rounded-xl flex flex-col md:flex-row gap-6 justify-between items-center">
+                  <div>
+                    <h5 className="text-lg font-bold text-white mb-1">Pricing</h5>
+                    <p className="text-orange-400 font-semibold text-xl">{project.price || 'Contact for price'}</p>
+                  </div>
+                  <div className="text-left md:text-right">
+                    <h5 className="text-lg font-bold text-white mb-1">Bank Loan</h5>
+                    <p className="text-zinc-400 font-medium">{project.bank_loan || 'Not Available'}</p>
+                  </div>
+                </div>
               </div>
             </div>
-
-
+          ))
+        ) : (
+          <div className="bg-[#090909] border-2 border-orange-600 rounded-2xl p-6 md:p-10 shadow-[0_8px_30px_rgba(0,0,0,0.5)] hover:border-orange-500 transition-colors">
+            <h3 className="text-2xl sm:text-3xl font-bold text-white mb-6">Project 1</h3>
+  
+            <div className="mb-8">
+              <HeroCarousel
+                images={[project1_1, project1_2, project1_3, project1_4, project1_5, project1_6, project1_7, project1_8]}
+                labels={Array(8).fill("Project 1")}
+                yBounce={[0, 0, 0]}
+                className="!aspect-[16/9] md:!aspect-[16/10] max-h-[700px]"
+              />
+            </div>
+  
+            <div className="space-y-6">
+              <h4 className="text-xl font-bold text-orange-500 flex items-center gap-2">
+                🌿 Project Highlights
+              </h4>
+  
+              <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm md:text-base text-zinc-300">
+                <li className="flex items-start gap-2"><Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> 350 Acres of premium farmland with 550 plots available in various sizes.</li>
+                <li className="flex items-start gap-2"><Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> Grand entrance arch with an elegant main gate.</li>
+                <li className="flex items-start gap-2"><Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> 24×7 security for a safe and secure environment.</li>
+                <li className="flex items-start gap-2"><Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> Individual water connection provided to every plot.</li>
+                <li className="flex items-start gap-2"><Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> Wide cement concrete main roads and well-laid internal roads.</li>
+                <li className="flex items-start gap-2"><Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> Street lighting throughout the project.</li>
+                <li className="flex items-start gap-2"><Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> Front picket compound fencing provided for every plot.</li>
+                <li className="flex items-start gap-2"><Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-semibold text-white">4-Acre Clubhouse featuring:</span>
+                    <ul className="ml-4 mt-2 space-y-1 text-zinc-400">
+                      <li>• Indoor &amp; outdoor games</li>
+                      <li>• Horse riding</li>
+                      <li>• Restaurant</li>
+                      <li>• Temple and peaceful meditation hall.</li>
+                    </ul>
+                  </div>
+                </li>
+                <li className="flex items-start gap-2"><Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> Plantation of 40+ varieties of trees, including Mango, Sapota, Jackfruit, Coconut, Teak, Silver Oak, and more.</li>
+                <li className="flex items-start gap-2"><Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> Organic farming guidance and support to help you cultivate your own produce.</li>
+                <li className="flex items-start gap-2"><Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> Close to popular tourist attractions like Muthyala Maduvu Waterfalls (Pearl Valley) and Pearl Valley Dam.</li>
+                <li className="flex items-start gap-2"><Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> Peaceful environment surrounded by beautiful mountain views.</li>
+                <li className="flex items-start gap-2"><Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> Excellent connectivity to Anekal, Chandapura, Electronic City, Bannerghatta Road, Kanakapura Road, and Hosur.</li>
+              </ul>
+  
+              <div className="mt-8 p-6 bg-zinc-950/80 border border-zinc-800 rounded-xl flex flex-col md:flex-row gap-6 justify-between items-center">
+                <div>
+                  <h5 className="text-lg font-bold text-white mb-1">Pricing</h5>
+                  <p className="text-orange-400 font-semibold text-xl">₹849 per sq. ft. <span className="text-sm text-zinc-500 font-normal">(Slightly Negotiable)</span></p>
+                </div>
+                <div className="text-left md:text-right">
+                  <h5 className="text-lg font-bold text-white mb-1">Bank Loan</h5>
+                  <p className="text-zinc-400 font-medium">Not Available</p>
+                </div>
+              </div>
+  
+  
+            </div>
           </div>
-        </div>
+        )}
       </motion.section>
 
     </motion.div>
