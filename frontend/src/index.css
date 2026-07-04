@@ -7,8 +7,9 @@
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 }
 
-body {
-  overflow-x: hidden;
+html, body {
+  width: 100%;
+  position: relative;
 }
 
 /* Custom styles for input date fields to look consistent on dark mode */

@@ -164,6 +164,34 @@ export default function ProjectsManager() {
     }
   };
 
+  const handleDeleteSingleImage = async (projectId: string, imageUrl: string) => {
+    if (!confirm('Are you sure you want to delete this image?')) return;
+    try {
+      const response = await fetch(`/api/projects/${projectId}/image`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageUrl }),
+      });
+      if (response.ok) {
+        // Update local state to reflect deletion
+        setProjects(projects.map(p => {
+          if (p.id === projectId) {
+            return {
+              ...p,
+              images: p.images.filter(img => img !== imageUrl)
+            };
+          }
+          return p;
+        }));
+      } else {
+        alert('Failed to delete image');
+      }
+    } catch (err) {
+      console.error('Failed to delete image', err);
+      alert('Network error while deleting image');
+    }
+  };
+
   if (loading) return <div className="text-zinc-400">Loading projects...</div>;
 
   return (
@@ -402,7 +430,16 @@ export default function ProjectsManager() {
                 {project.images && project.images.length > 0 && (
                   <div className="mt-2 flex gap-2 overflow-x-auto pb-2 snap-x">
                     {project.images.map((img, i) => (
-                      <img key={i} src={img} alt="" className="h-16 w-16 object-cover rounded-lg shrink-0 snap-start" />
+                      <div key={i} className="relative group/img shrink-0 snap-start">
+                        <img src={img} alt="" className="h-16 w-16 object-cover rounded-lg" />
+                        <button
+                          onClick={() => handleDeleteSingleImage(project.id, img)}
+                          className="absolute -top-1 -right-1 bg-red-500 text-white p-0.5 rounded-full opacity-0 group-hover/img:opacity-100 transition-opacity shadow-lg"
+                          title="Delete image"
+                        >
+                          <X size={12} />
+                        </button>
+                      </div>
                     ))}
                   </div>
                 )}

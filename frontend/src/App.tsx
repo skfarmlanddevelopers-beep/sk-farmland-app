@@ -96,75 +96,78 @@ export default function App() {
             </div>
           )}
 
-          <main id="main-content-area" className={`flex-grow pb-12 bg-black ${activePage === 'home' ? 'pt-0' : 'pt-6'}`}>
-            <div className="w-full">
-              {activePage === 'home' && (
-                <Home setActivePage={setActivePage} onBookClick={() => handleBookWithProject()} />
-              )}
-              {activePage === 'about' && (
-                <AboutUs setActivePage={setActivePage} onBookClick={() => handleBookWithProject()} />
-              )}
-              {activePage === 'projects' && (
-                <Projects onBookClick={handleBookWithProject} />
-              )}
-              {activePage === 'managed' && (
-                <ManagedFarmland onBookClick={() => handleBookWithProject()} />
-              )}
-              {activePage === 'plain' && (
-                <PlainLand onBookClick={() => handleBookWithProject()} />
-              )}
-              {activePage === 'journey' && (
-                <YourJourney onBookClick={() => handleBookWithProject()} />
-              )}
-              {activePage === 'gallery' && (
-                <Gallery onBookClick={() => handleBookWithProject()} />
-              )}
-              {activePage === 'contact' && (
+          {/* Main Content Wrapper - Clips horizontal overflow to prevent mobile scrolling bugs without breaking sticky header */}
+          <div className="flex-grow flex flex-col w-full overflow-x-hidden relative">
+            <main id="main-content-area" className={`flex-grow pb-12 bg-black ${activePage === 'home' ? 'pt-0' : 'pt-6'}`}>
+              <div className="w-full">
+                {activePage === 'home' && (
+                  <Home setActivePage={setActivePage} onBookClick={() => handleBookWithProject()} />
+                )}
+                {activePage === 'about' && (
+                  <AboutUs setActivePage={setActivePage} onBookClick={() => handleBookWithProject()} />
+                )}
+                {activePage === 'projects' && (
+                  <Projects onBookClick={handleBookWithProject} />
+                )}
+                {activePage === 'managed' && (
+                  <ManagedFarmland onBookClick={() => handleBookWithProject()} />
+                )}
+                {activePage === 'plain' && (
+                  <PlainLand onBookClick={() => handleBookWithProject()} />
+                )}
+                {activePage === 'journey' && (
+                  <YourJourney onBookClick={() => handleBookWithProject()} />
+                )}
+                {activePage === 'gallery' && (
+                  <Gallery onBookClick={() => handleBookWithProject()} />
+                )}
+                {activePage === 'contact' && (
+                  <Contact onBookClick={() => handleBookWithProject()} />
+                )}
+                {activePage === 'faqs' && (
+                  <Faqs setActivePage={setActivePage} />
+                )}
+                {activePage === 'testimonials' && (
+                  <Testimonials setActivePage={setActivePage} />
+                )}
+                {(activePage === 'terms' || activePage === 'privacy' || activePage === 'disclaimer') && (
+                  <LegalPages viewType={activePage} />
+                )}
+                {activePage === 'adminLogin' && (
+                  <AdminLogin setActivePage={setActivePage} />
+                )}
+                {activePage === 'adminDashboard' && (
+                  <AdminDashboard setActivePage={setActivePage} />
+                )}
+              </div>
+            </main>
+
+            {/* Contact Section globally rendered above footer (only on home page) */}
+            {activePage === 'home' && (
+              <div className="border-t border-zinc-900/50 bg-black pt-4">
                 <Contact onBookClick={() => handleBookWithProject()} />
-              )}
-              {activePage === 'faqs' && (
-                <Faqs setActivePage={setActivePage} />
-              )}
-              {activePage === 'testimonials' && (
-                <Testimonials setActivePage={setActivePage} />
-              )}
-              {(activePage === 'terms' || activePage === 'privacy' || activePage === 'disclaimer') && (
-                <LegalPages viewType={activePage} />
-              )}
-              {activePage === 'adminLogin' && (
-                <AdminLogin setActivePage={setActivePage} />
-              )}
-              {activePage === 'adminDashboard' && (
-                <AdminDashboard setActivePage={setActivePage} />
-              )}
-            </div>
-          </main>
+              </div>
+            )}
 
-          {/* Contact Section globally rendered above footer (only on home page) */}
-          {activePage === 'home' && (
-            <div className="border-t border-zinc-900/50 bg-black pt-4">
-              <Contact onBookClick={() => handleBookWithProject()} />
-            </div>
-          )}
-
-          {/* Hide Footer and Widgets on admin routes */}
-          {activePage !== 'adminLogin' && activePage !== 'adminDashboard' && (
-            <>
-              <Footer setActivePage={setActivePage} onBookClick={() => handleBookWithProject()} />
-              <WhatsAppButton />
-              <MobileContactBar />
-            </>
-          )}
-          
-          {/* Site Visit Lead Capture Form Modal */}
-          <BookVisitModal
-            isOpen={isBookingOpen}
-            onClose={() => {
-              setIsBookingOpen(false);
-              setSelectedProject('');
-            }}
-            preSelectedProject={selectedProject}
-          />
+            {/* Hide Footer and Widgets on admin routes */}
+            {activePage !== 'adminLogin' && activePage !== 'adminDashboard' && (
+              <>
+                <Footer setActivePage={setActivePage} onBookClick={() => handleBookWithProject()} />
+                <WhatsAppButton />
+                <MobileContactBar />
+              </>
+            )}
+            
+            {/* Site Visit Lead Capture Form Modal */}
+            <BookVisitModal
+              isOpen={isBookingOpen}
+              onClose={() => {
+                setIsBookingOpen(false);
+                setSelectedProject('');
+              }}
+              preSelectedProject={selectedProject}
+            />
+          </div>
         </div>
       )}
 

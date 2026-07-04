@@ -534,6 +534,40 @@ app.put('/api/projects/:id', upload.array('images', 15), async (req, res) => {
   }
 });
 
+app.delete('/api/projects/:id/image', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { imageUrl } = req.body;
+    
+    if (!imageUrl) {
+      return res.status(400).json({ error: 'Image URL is required' });
+    }
+
+    const [rows] = await db.query('SELECT images FROM projects WHERE id = ?', [id]);
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Project not found' });
+    }
+
+    let images = typeof rows[0].images === 'string' ? JSON.parse(rows[0].images) : rows[0].images;
+    if (!Array.isArray(images)) images = [];
+
+    const updatedImages = images.filter(img => img !== imageUrl);
+
+    // Delete the file from filesystem
+    const filename = imageUrl.split('/').pop();
+    const filePath = path.join(__dirname, 'user-uploads', filename);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+
+    await db.query('UPDATE projects SET images = ? WHERE id = ?', [JSON.stringify(updatedImages), id]);
+    res.json({ success: true, updatedImages });
+  } catch (err) {
+    console.error('Error deleting project image:', err);
+    res.status(500).json({ error: 'Failed to delete image' });
+  }
+});
+
 app.delete('/api/projects/:id', async (req, res) => {
   try {
     const { id } = req.params;

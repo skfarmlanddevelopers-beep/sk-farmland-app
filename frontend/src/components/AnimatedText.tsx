@@ -67,37 +67,41 @@ export default function AnimatedText({
   }
 
   // default to typing/characters
+  let charCounter = 0;
+  const timePerChar = duration / Math.max(1, characters.length);
+
   return (
     <span ref={ref} className={`inline ${className}`}>
       <span className="sr-only">{text}</span>
-      <motion.span
-        initial="hidden"
-        animate={isInView ? 'visible' : 'hidden'}
-        variants={{
-          visible: {
-            transition: {
-              staggerChildren: duration / Math.max(1, characters.length),
-              delayChildren: delay,
-            },
-          },
-          hidden: {},
-        }}
-        aria-hidden="true"
-        className="inline"
-      >
-        {characters.map((char, i) => (
-          <motion.span
-            key={i}
-            variants={{
-              hidden: { opacity: 0, display: 'none' },
-              visible: { opacity: 1, display: 'inline' },
-            }}
-            className={char === ' ' ? "whitespace-pre-wrap" : ""}
-          >
-            {char === ' ' ? ' ' : char}
-          </motion.span>
-        ))}
-      </motion.span>
+      <span aria-hidden="true" className="inline">
+        {words.flatMap((word, wordIndex) => {
+          const wordElement = (
+            <span key={`word-${wordIndex}`} className="inline-block whitespace-nowrap">
+              {Array.from(word).map((char, charIndex) => {
+                const currentDelay = delay + charCounter * timePerChar;
+                charCounter++;
+                return (
+                  <motion.span
+                    key={`char-${wordIndex}-${charIndex}`}
+                    initial={{ opacity: 0, display: 'none' }}
+                    animate={isInView ? { opacity: 1, display: 'inline' } : { opacity: 0, display: 'none' }}
+                    transition={{ delay: currentDelay }}
+                    className="inline"
+                  >
+                    {char}
+                  </motion.span>
+                );
+              })}
+            </span>
+          );
+          
+          charCounter++; // Increment for the space between words
+          
+          return wordIndex === words.length - 1 
+            ? [wordElement]
+            : [wordElement, <span key={`space-${wordIndex}`}> </span>];
+        })}
+      </span>
     </span>
   );
 }
