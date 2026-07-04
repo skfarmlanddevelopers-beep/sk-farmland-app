@@ -1,6 +1,7 @@
 import { Phone, Mail, MapPin, Sparkles } from 'lucide-react';
 import { PageId } from '../types';
 import Logo from './Logo';
+import AnimatedReveal from './AnimatedReveal';
 
 interface FooterProps {
   setActivePage: (page: PageId) => void;
@@ -18,138 +19,146 @@ export default function Footer({ setActivePage, onBookClick }: FooterProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
 
           {/* Brand & Description Column */}
-          <div id="footer-brand-column" className="space-y-4">
-            <div className="flex items-center">
-              <Logo className="w-13 h-13" showText={true} />
+          <AnimatedReveal type="slide" direction="up" delay={0.1} duration={0.8}>
+            <div id="footer-brand-column" className="space-y-4">
+              <div className="flex items-center">
+                <Logo className="w-13 h-13" showText={true} />
+              </div>
+
+              <p className="text-xs text-zinc-400 leading-relaxed pt-2">
+                Premium, high-yield managed and plain farmland projects near Bengaluru. We simplify farmland investments with clear titles, 24/7 security, and comprehensive legal verification.
+              </p>
+
+
             </div>
-
-            <p className="text-xs text-zinc-400 leading-relaxed pt-2">
-              Premium, high-yield managed and plain farmland projects near Bengaluru. We simplify farmland investments with clear titles, 24/7 security, and comprehensive legal verification.
-            </p>
-
-
-          </div>
+          </AnimatedReveal>
 
           {/* Quick Links */}
-          <div id="footer-links-column" className="space-y-4">
-            <h4 className="text-xs uppercase font-bold tracking-[0.3em] text-white font-mono border-l-2 border-orange-500 pl-3">
-              Explore Projects
-            </h4>
-            <ul className="space-y-2.5 text-xs">
-              <li>
-                <button
-                  onClick={() => setActivePage('home')}
-                  className="hover:text-orange-500 transition-colors cursor-pointer"
-                >
-                  Home Screen
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => setActivePage('about')}
-                  className="hover:text-orange-500 transition-colors cursor-pointer"
-                >
-                  About Our Legacy
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => setActivePage('managed')}
-                  className="hover:text-orange-500 transition-colors cursor-pointer"
-                >
-                  Managed Farmland Features
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => setActivePage('projects')}
-                  className="hover:text-orange-500 transition-colors cursor-pointer"
-                >
-                  Active Land Projects
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => setActivePage('journey')}
-                  className="hover:text-orange-500 transition-colors cursor-pointer"
-                >
-                  Your Buying Journey
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => setActivePage('gallery')}
-                  className="hover:text-orange-500 transition-colors cursor-pointer"
-                >
-                  Visual Photo Gallery
-                </button>
-              </li>
-            </ul>
-          </div>
+          <AnimatedReveal type="slide" direction="up" delay={0.2} duration={0.8}>
+            <div id="footer-links-column" className="space-y-4">
+              <h4 className="text-xs uppercase font-bold tracking-[0.3em] text-white font-mono border-l-2 border-orange-500 pl-3">
+                Explore Projects
+              </h4>
+              <ul className="space-y-2.5 text-xs">
+                <li>
+                  <button
+                    onClick={() => setActivePage('home')}
+                    className="hover:text-orange-500 transition-colors cursor-pointer"
+                  >
+                    Home Screen
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => setActivePage('about')}
+                    className="hover:text-orange-500 transition-colors cursor-pointer"
+                  >
+                    About Our Legacy
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => setActivePage('managed')}
+                    className="hover:text-orange-500 transition-colors cursor-pointer"
+                  >
+                    Managed Farmland Features
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => setActivePage('projects')}
+                    className="hover:text-orange-500 transition-colors cursor-pointer"
+                  >
+                    Active Land Projects
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => setActivePage('journey')}
+                    className="hover:text-orange-500 transition-colors cursor-pointer"
+                  >
+                    Your Buying Journey
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => setActivePage('gallery')}
+                    className="hover:text-orange-500 transition-colors cursor-pointer"
+                  >
+                    Visual Photo Gallery
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </AnimatedReveal>
 
           {/* Location & Sites */}
-          <div id="footer-locations-column" className="space-y-4">
-            <h4 className="text-xs uppercase font-bold tracking-[0.3em] text-white font-mono border-l-2 border-orange-500 pl-3">
-              Prime Locations
-            </h4>
-            <ul className="space-y-2.5 text-xs text-zinc-400">
-              <li className="flex items-start gap-2">
-                <span className="text-orange-500 mt-0.5">🌱</span>
-                <span>Anekal Thalli Road towards Hoganekkal Road</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-orange-500 mt-0.5">🌱</span>
-                <span>Near Electronic City, Jigani, Chandapur</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-orange-500 mt-0.5">🌱</span>
-                <span>Bannerghatta Road, Kanakapura Road & Hosur</span>
-              </li>
+          <AnimatedReveal type="slide" direction="up" delay={0.3} duration={0.8}>
+            <div id="footer-locations-column" className="space-y-4">
+              <h4 className="text-xs uppercase font-bold tracking-[0.3em] text-white font-mono border-l-2 border-orange-500 pl-3">
+                Prime Locations
+              </h4>
+              <ul className="space-y-2.5 text-xs text-zinc-400">
+                <li className="flex items-start gap-2">
+                  <span className="text-orange-500 mt-0.5">🌱</span>
+                  <span>Anekal Thalli Road towards Hoganekkal Road</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-orange-500 mt-0.5">🌱</span>
+                  <span>Near Electronic City, Jigani, Chandapur</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-orange-500 mt-0.5">🌱</span>
+                  <span>Bannerghatta Road, Kanakapura Road & Hosur</span>
+                </li>
 
-            </ul>
-          </div>
+              </ul>
+            </div>
+          </AnimatedReveal>
 
           {/* Get In Touch */}
-          <div id="footer-contact-column" className="space-y-4">
-            <h4 className="text-xs uppercase font-bold tracking-[0.3em] text-white font-mono border-l-2 border-orange-500 pl-3">
-              Direct Contact
-            </h4>
+          <AnimatedReveal type="slide" direction="up" delay={0.4} duration={0.8}>
+            <div id="footer-contact-column" className="space-y-4">
+              <h4 className="text-xs uppercase font-bold tracking-[0.3em] text-white font-mono border-l-2 border-orange-500 pl-3">
+                Direct Contact
+              </h4>
 
-            <div className="space-y-3.5 text-xs text-zinc-400">
-              <a href="tel:+917411131002" className="flex items-center gap-3 hover:text-orange-500 transition-colors">
-                <span className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0">
-                  <Phone size={18} className="text-orange-500" />
-                </span>
-                <span>+91 74111 31002</span>
-              </a>
+              <div className="space-y-3.5 text-xs text-zinc-400">
+                <a href="tel:+917411131002" className="flex items-center gap-3 hover:text-orange-500 transition-colors">
+                  <span className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0">
+                    <Phone size={18} className="text-orange-500" />
+                  </span>
+                  <span>+91 74111 31002</span>
+                </a>
 
-              <a href="mailto:info@skfarmlanddevelopers.com" className="flex items-center gap-3 hover:text-orange-500 transition-colors">
-                <span className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0">
-                  <Mail size={18} className="text-orange-500" />
-                </span>
-                <span>info@skfarmlanddevelopers.com</span>
-              </a>
+                <a href="mailto:info@skfarmlanddevelopers.com" className="flex items-center gap-3 hover:text-orange-500 transition-colors">
+                  <span className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0">
+                    <Mail size={18} className="text-orange-500" />
+                  </span>
+                  <span>info@skfarmlanddevelopers.com</span>
+                </a>
 
-              <div className="flex items-start gap-3">
-                <span className="text-orange-500 mt-0.5">
-                  <MapPin size={14} />
-                </span>
-                <span className="leading-relaxed">
-                  Office:
-                  Gumalpura Anekal thalli road tamilnadu
-                </span>
+                <div className="flex items-start gap-3">
+                  <span className="text-orange-500 mt-0.5">
+                    <MapPin size={14} />
+                  </span>
+                  <span className="leading-relaxed">
+                    Office:
+                    Gumalpura Anekal thalli road tamilnadu
+                  </span>
+                </div>
               </div>
-            </div>
 
-            {/*  <button
-              id="footer-book-visit-btn"
-              onClick={onBookClick}
-              className="mt-2 w-full flex items-center justify-center gap-2 border border-orange-500/30 text-orange-400 hover:text-white hover:bg-orange-600/10 px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wider transition-all uppercase cursor-pointer"
-            >
-              <Sparkles size={11} className="text-orange-500" />
-              Enquire Now
-            </button> */}
-          </div>
+              {/*  <button
+                id="footer-book-visit-btn"
+                onClick={onBookClick}
+                className="mt-2 w-full flex items-center justify-center gap-2 border border-orange-500/30 text-orange-400 hover:text-white hover:bg-orange-600/10 px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wider transition-all uppercase cursor-pointer"
+              >
+                <Sparkles size={11} className="text-orange-500" />
+                Enquire Now
+              </button> */}
+            </div>
+          </AnimatedReveal>
 
         </div>
 

@@ -16,6 +16,7 @@ import Home from './pages/Home';
 import AboutUs from './pages/AboutUs';
 import Projects from './pages/Projects';
 import ManagedFarmland from './pages/ManagedFarmland';
+import PlainLand from './pages/PlainLand';
 import YourJourney from './pages/YourJourney';
 import Gallery from './pages/Gallery';
 import Contact from './pages/Contact';
@@ -63,7 +64,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col font-sans selection:bg-orange-500/30 selection:text-orange-300 antialiased">
+    <div className="min-h-screen w-full bg-black text-white flex flex-col font-sans selection:bg-orange-500/30 selection:text-orange-300 antialiased">
       
       {/* 1. Preloader Startup Animation */}
       <AnimatePresence>
@@ -108,6 +109,9 @@ export default function App() {
               )}
               {activePage === 'managed' && (
                 <ManagedFarmland onBookClick={() => handleBookWithProject()} />
+              )}
+              {activePage === 'plain' && (
+                <PlainLand onBookClick={() => handleBookWithProject()} />
               )}
               {activePage === 'journey' && (
                 <YourJourney onBookClick={() => handleBookWithProject()} />

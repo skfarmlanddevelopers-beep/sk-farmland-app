@@ -17,7 +17,7 @@ export default function BookVisitModal({ isOpen, onClose, preSelectedProject = '
     preferredDate: '',
     projectInterest: preSelectedProject || 'Managed Farmland (Hassle-Free Option)',
     notes: '',
-    budget: '₹40–60 Lakhs',
+    budget: 'Rs.60 to Rs.80 Lakh',
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -79,7 +79,7 @@ export default function BookVisitModal({ isOpen, onClose, preSelectedProject = '
       preferredDate: '',
       projectInterest: 'Managed Farmland (Hassle-Free Option)',
       notes: '',
-      budget: '₹40–60 Lakhs',
+      budget: 'Rs.60 to Rs.80 Lakh',
     });
     setIsSuccess(false);
     onClose();
@@ -124,8 +124,11 @@ export default function BookVisitModal({ isOpen, onClose, preSelectedProject = '
               <form onSubmit={handleSubmit} className="p-6 md:p-8">
                 {/* Header */}
                 <div className="mb-6 space-y-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-orange-500">📞 Get In Touch</span>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-sm font-medium text-zinc-300">For the Best Price &amp; Best Service</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-bold text-orange-500">📞 Get In Touch</span>
+                    </div>
                   </div>
                   <p className="text-xs text-zinc-400 leading-relaxed">
                     Looking to own farmland near Bangalore? Our team is here to guide you at every step—from selecting the right plot to booking your plot. We’ll help you choose the best option based on your budget and requirements.
@@ -222,9 +225,9 @@ export default function BookVisitModal({ isOpen, onClose, preSelectedProject = '
                         onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
                         className="w-full bg-[#161616] border border-zinc-800 focus:border-orange-500 text-zinc-100 rounded-lg py-2.5 px-3 text-sm outline-none transition-all"
                       >
-                        <option value="₹40–60 Lakhs" className="bg-[#161616]">₹40–60 Lakhs</option>
-                        <option value="₹60–80 Lakhs" className="bg-[#161616]">₹60–80 Lakhs</option>
-                        <option value="₹80 Lakhs & Above" className="bg-[#161616]">₹80 Lakhs & Above</option>
+                        <option value="Rs.60 to Rs.80 Lakh" className="bg-[#161616]">Rs.60 to Rs.80 Lakh</option>
+                        <option value="Rs.80 to Rs.1 Crore" className="bg-[#161616]">Rs.80 to Rs.1 Crore</option>
+                        <option value="Rs.1 Crore & Above" className="bg-[#161616]">Rs.1 Crore & Above</option>
                       </select>
                     </div>
                   </div>

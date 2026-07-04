@@ -13,7 +13,7 @@ export default function Contact({ onBookClick }: ContactProps) {
     phone: '',
     email: '',
     interest: 'Managed Farmland (Hassle-Free Option)',
-    budget: '₹40–60 Lakhs',
+    budget: 'Rs.60 to Rs.80 Lakh',
     notes: '',
   });
 
@@ -52,7 +52,7 @@ export default function Contact({ onBookClick }: ContactProps) {
       phone: '',
       email: '',
       interest: 'Managed Farmland (Hassle-Free Option)',
-      budget: '₹40–60 Lakhs',
+      budget: 'Rs.60 to Rs.80 Lakh',
       notes: '',
     });
 
@@ -78,6 +78,7 @@ export default function Contact({ onBookClick }: ContactProps) {
           <Calendar size={11} className="animate-pulse" />
           Get in Touch
         </div>
+        <p className="text-lg md:text-xl font-medium text-zinc-300 mb-2">For the Best Price &amp; Best Service</p>
         <motion.h1
           initial="hidden"
           animate="visible"
@@ -175,9 +176,9 @@ export default function Contact({ onBookClick }: ContactProps) {
                       onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
                       className="w-full bg-[#141414] border border-zinc-800 focus:border-orange-500 text-zinc-100 rounded-lg py-2.5 px-3 text-sm outline-none transition-all"
                     >
-                      <option value="₹40–60 Lakhs">₹40–60 Lakhs</option>
-                      <option value="₹60–80 Lakhs">₹60–80 Lakhs</option>
-                      <option value="₹80 Lakhs & Above">₹80 Lakhs & Above</option>
+                      <option value="Rs.60 to Rs.80 Lakh">Rs.60 to Rs.80 Lakh</option>
+                      <option value="Rs.80 to Rs.1 Crore">Rs.80 to Rs.1 Crore</option>
+                      <option value="Rs.1 Crore & Above">Rs.1 Crore & Above</option>
                     </select>
                   </div>
 

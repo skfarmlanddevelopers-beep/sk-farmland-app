@@ -15,11 +15,11 @@ export default function Loader({ onComplete }: LoaderProps) {
     // Stage 1: Showing logo symbol (0s - 1.2s)
     const t1 = setTimeout(() => setStep(1), 1000);
     // Stage 2: Spacing expansion and branding (1.2s - 2.6s)
-    const t2 = setTimeout(() => setStep(2), 2200);
-    // Finish loading (3.0s)
+    const t2 = setTimeout(() => setStep(2), 2000);
+    // Finish loading (4.5s) to allow reading the slogan
     const t3 = setTimeout(() => {
       onComplete();
-    }, 3000);
+    }, 4000);
 
     return () => {
       clearTimeout(t1);
@@ -70,7 +70,28 @@ export default function Loader({ onComplete }: LoaderProps) {
           />
         </motion.div>
 
-
+        {/* Golden Slogan */}
+        <motion.div
+          id="loader-slogan-container"
+          initial={{ y: 20, opacity: 0 }}
+          animate={step >= 1 ? { y: 0, opacity: 1 } : { y: 20, opacity: 0 }}
+          transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-6 flex justify-center w-full px-4"
+        >
+          <motion.h2
+            animate={{ y: [0, -4, 0] }}
+            transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+            className="text-center font-serif text-[10px] sm:text-xs md:text-sm tracking-[0.15em] sm:tracking-[0.2em] font-bold uppercase drop-shadow-[0_0_10px_rgba(255,215,0,0.4)]"
+            style={{
+              background: 'linear-gradient(to right, #B8860B, #FFD700, #FFF8DC, #FFD700, #B8860B)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundSize: '200% auto'
+            }}
+          >
+            The best investment on this earth is earth
+          </motion.h2>
+        </motion.div>
 
         {/* Minimalist Progress Bar */}
         <div className="absolute bottom-[-60px] w-48 h-[1px] bg-zinc-900 overflow-hidden rounded-full">
