@@ -562,12 +562,12 @@ app.delete('/api/projects/:id', async (req, res) => {
   }
 });
 
-// Serve static React files in production
-app.use(express.static(path.join(__dirname, '../frontend/dist')));
+// Serve frontend static files
+app.use(express.static(path.join(__dirname, '../frontend/build_production')));
 
-// Fallback for React Router (if using one in the future) or state-based single page
+// Catch-all route to serve the React app
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
+  res.sendFile(path.join(__dirname, '../frontend/build_production', 'index.html'));
 });
 
 app.listen(PORT, () => {
