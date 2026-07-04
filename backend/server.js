@@ -93,16 +93,17 @@ app.get('/api/site-visits', async (req, res) => {
 // Dashboard Stats Route
 app.get('/api/stats', async (req, res) => {
   try {
-    const [projects] = await db.query('SELECT COUNT(*) as count FROM projects');
-    const [leads] = await db.query('SELECT COUNT(*) as count FROM leads');
-    const [gallery] = await db.query('SELECT COUNT(*) as count FROM gallery');
-    const [siteVisits] = await db.query('SELECT COUNT(*) as count FROM site_visits');
+    let projectsCount = 0, leadsCount = 0, galleryCount = 0, siteVisitsCount = 0;
+    try { const [p] = await db.query('SELECT COUNT(*) as count FROM projects'); projectsCount = p[0].count; } catch (e) {}
+    try { const [l] = await db.query('SELECT COUNT(*) as count FROM leads'); leadsCount = l[0].count; } catch (e) {}
+    try { const [g] = await db.query('SELECT COUNT(*) as count FROM gallery'); galleryCount = g[0].count; } catch (e) {}
+    try { const [s] = await db.query('SELECT COUNT(*) as count FROM site_visits'); siteVisitsCount = s[0].count; } catch (e) {}
 
     res.json({
-      projects: projects[0].count,
-      leads: leads[0].count,
-      gallery: gallery[0].count,
-      siteVisits: siteVisits[0].count
+      projects: projectsCount,
+      leads: leadsCount,
+      gallery: galleryCount,
+      siteVisits: siteVisitsCount
     });
   } catch (err) {
     console.error('Error fetching stats:', err);
@@ -319,101 +320,103 @@ app.delete('/api/admin/users/:id', async (req, res) => {
 // Create tables on startup if they don't exist
 async function initDb() {
   try {
-    await db.query(`
-      CREATE TABLE IF NOT EXISTS projects (
-        id VARCHAR(100) PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        price VARCHAR(100),
-        bank_loan VARCHAR(100),
-        images JSON,
-        highlights JSON,
-        show_on_home BOOLEAN DEFAULT FALSE,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
+    try {
+      await db.query(`
+        CREATE TABLE IF NOT EXISTS projects (
+          id VARCHAR(100) PRIMARY KEY,
+          name VARCHAR(255) NOT NULL,
+          price VARCHAR(100),
+          bank_loan VARCHAR(100),
+          images LONGTEXT,
+          highlights LONGTEXT,
+          show_on_home BOOLEAN DEFAULT FALSE,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+    } catch (e) { console.error('Failed creating projects:', e.message); }
+
+    try { await db.query(`ALTER TABLE projects ADD COLUMN show_on_home BOOLEAN DEFAULT FALSE`); } catch (err) {}
+    try { await db.query(`ALTER TABLE projects ADD COLUMN display_order INT DEFAULT 0`); } catch (err) {}
+    try { await db.query(`ALTER TABLE hero_images ADD COLUMN display_order INT DEFAULT 0`); } catch (err) {}
 
     try {
-      await db.query(`ALTER TABLE projects ADD COLUMN show_on_home BOOLEAN DEFAULT FALSE`);
-    } catch (err) {
-      // Ignore if column already exists
-    }
+      await db.query(`
+        CREATE TABLE IF NOT EXISTS gallery (
+          id VARCHAR(100) PRIMARY KEY,
+          title VARCHAR(255),
+          category VARCHAR(100),
+          image TEXT,
+          description TEXT
+        )
+      `);
+    } catch (e) { console.error('Failed creating gallery:', e.message); }
 
     try {
-      await db.query(`ALTER TABLE projects ADD COLUMN display_order INT DEFAULT 0`);
-    } catch (err) {
-      // Ignore if column already exists
-    }
+      await db.query(`
+        CREATE TABLE IF NOT EXISTS leads (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          name VARCHAR(255) NOT NULL,
+          phone VARCHAR(50) NOT NULL,
+          email VARCHAR(255),
+          interest VARCHAR(255),
+          budget VARCHAR(100),
+          notes TEXT,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+    } catch (e) { console.error('Failed creating leads:', e.message); }
 
     try {
-      await db.query(`ALTER TABLE hero_images ADD COLUMN display_order INT DEFAULT 0`);
-    } catch (err) {
-      // Ignore if column already exists
-    }
+      await db.query(`
+        CREATE TABLE IF NOT EXISTS hero_images (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          side ENUM('left', 'right') NOT NULL,
+          image_path VARCHAR(255) NOT NULL,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+    } catch (e) { console.error('Failed creating hero_images:', e.message); }
 
-    await db.query(`
-      CREATE TABLE IF NOT EXISTS gallery (
-        id VARCHAR(100) PRIMARY KEY,
-        title VARCHAR(255),
-        category VARCHAR(100),
-        image TEXT,
-        description TEXT
-      )
-    `);
-
-    await db.query(`
-      CREATE TABLE IF NOT EXISTS leads (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        phone VARCHAR(50) NOT NULL,
-        email VARCHAR(255),
-        interest VARCHAR(255),
-        budget VARCHAR(100),
-        notes TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-
-    await db.query(`
-      CREATE TABLE IF NOT EXISTS hero_images (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        side ENUM('left', 'right') NOT NULL,
-        image_path VARCHAR(255) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
-
-    await db.query(`
-      CREATE TABLE IF NOT EXISTS site_visits (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        phone VARCHAR(50) NOT NULL,
-        email VARCHAR(255),
-        project_interest VARCHAR(255),
-        budget VARCHAR(100),
-        preferred_date VARCHAR(100),
-        notes TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
-    `);
+    try {
+      await db.query(`
+        CREATE TABLE IF NOT EXISTS site_visits (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          name VARCHAR(255) NOT NULL,
+          phone VARCHAR(50) NOT NULL,
+          email VARCHAR(255),
+          project_interest VARCHAR(255),
+          budget VARCHAR(100),
+          preferred_date VARCHAR(100),
+          notes TEXT,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+    } catch (e) { console.error('Failed creating site_visits:', e.message); }
     
-    await db.query(`
-      CREATE TABLE IF NOT EXISTS admin_settings (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        username VARCHAR(255) NOT NULL,
-        password VARCHAR(255) NOT NULL
-      )
-    `);
+    try {
+      await db.query(`
+        CREATE TABLE IF NOT EXISTS admin_settings (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          username VARCHAR(255) NOT NULL,
+          password VARCHAR(255) NOT NULL
+        )
+      `);
+    } catch (e) { console.error('Failed creating admin_settings:', e.message); }
 
-    const [adminRows] = await db.query('SELECT * FROM admin_settings LIMIT 1');
-    if (adminRows.length === 0) {
-      await db.query('INSERT INTO admin_settings (username, password) VALUES (?, ?)', ['admin', 'password123']);
-    }
+    try {
+      const [adminRows] = await db.query('SELECT * FROM admin_settings LIMIT 1');
+      if (adminRows.length === 0) {
+        await db.query('INSERT INTO admin_settings (username, password) VALUES (?, ?)', ['admin', 'password123']);
+      }
+    } catch (e) { console.error('Failed inserting admin:', e.message); }
 
     console.log('Database tables verified.');
   } catch (error) {
     console.error('Database initialization failed:', error);
   }
 }
+// Run initDb immediately just in case app.listen callback is skipped by Phusion Passenger
+initDb();
 
 // Projects Routes
 app.get('/api/projects', async (req, res) => {
@@ -567,7 +570,6 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
 });
 
-app.listen(PORT, async () => {
+app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  await initDb();
 });
