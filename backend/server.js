@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 import db from './db.js';
 import multer from 'multer';
 import fs from 'fs';
+import os from 'os';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,7 +17,9 @@ app.use(cors());
 app.use(express.json());
 
 // Ensure upload directory exists
-const uploadDir = path.join(__dirname, 'user-uploads');
+// SECURITY/DEPLOYMENT FIX: Use os.homedir() to store uploads OUTSIDE the git repository.
+// This prevents Hostinger's git deployment from wiping the images every time a push happens.
+const uploadDir = path.join(os.homedir(), 'sk-farmland-uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
@@ -34,7 +37,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Serve uploaded files statically
-app.use('/uploads', express.static(path.join(__dirname, 'user-uploads')));
+app.use('/uploads', express.static(uploadDir));
 
 
 
@@ -159,7 +162,7 @@ app.delete('/api/gallery/:id', async (req, res) => {
       const imagePath = rows[0].image;
       if (imagePath && imagePath.startsWith('/uploads/')) {
         const filename = imagePath.split('/').pop();
-        const fullPath = path.join(__dirname, 'user-uploads', filename);
+        const fullPath = path.join(uploadDir, filename);
         if (fs.existsSync(fullPath)) {
           fs.unlinkSync(fullPath);
         }
@@ -214,7 +217,7 @@ app.delete('/api/hero-images/:id', async (req, res) => {
       const imagePath = rows[0].image_path;
       // imagePath is like "/uploads/123.jpg", we need to map to physical file
       const filename = imagePath.split('/').pop();
-      const fullPath = path.join(__dirname, 'user-uploads', filename);
+      const fullPath = path.join(uploadDir, filename);
       if (fs.existsSync(fullPath)) {
         fs.unlinkSync(fullPath);
       }
@@ -509,7 +512,7 @@ app.put('/api/projects/:id', upload.array('images', 15), async (req, res) => {
         const oldImages = typeof rows[0].images === 'string' ? JSON.parse(rows[0].images) : rows[0].images;
         oldImages.forEach(img => {
           const filename = img.split('/').pop();
-          const fullPath = path.join(__dirname, 'user-uploads', filename);
+          const fullPath = path.join(uploadDir, filename);
           if (fs.existsSync(fullPath)) fs.unlinkSync(fullPath);
         });
       }
@@ -555,7 +558,7 @@ app.delete('/api/projects/:id/image', async (req, res) => {
 
     // Delete the file from filesystem
     const filename = imageUrl.split('/').pop();
-    const filePath = path.join(__dirname, 'user-uploads', filename);
+    const filePath = path.join(uploadDir, filename);
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
@@ -581,7 +584,7 @@ app.delete('/api/projects/:id', async (req, res) => {
     if (Array.isArray(images)) {
       images.forEach(imgPath => {
         const filename = imgPath.split('/').pop();
-        const filePath = path.join(__dirname, 'user-uploads', filename);
+        const filePath = path.join(uploadDir, filename);
         if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath);
         }
