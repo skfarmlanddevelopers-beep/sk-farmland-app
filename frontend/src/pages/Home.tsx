@@ -1,0 +1,622 @@
+import React, { useRef, useState, useEffect } from 'react';
+import { motion, useScroll, useTransform, AnimatePresence, useInView, animate } from 'motion/react';
+import { Leaf, Award, Map, Users, Home as HomeIcon, Check, Calendar, MessageCircle } from 'lucide-react';
+import { PageId } from '../types';
+import { statsData } from '../data';
+import heroTop from '../assets/hero-top.jpg';
+import heroBottom from '../assets/hero-bottom.jpg';
+import gallery1 from '../assets/gallery-1.jpeg';
+import gallery2 from '../assets/gallery-2.jpeg';
+
+
+
+interface HeroCarouselProps {
+  images: string[];
+  labels: string[];
+  yBounce: number[];
+  className?: string;
+  children?: React.ReactNode;
+}
+
+function HeroCarousel({ images, labels, yBounce, className = "", children }: HeroCarouselProps) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % images.length);
+    }, 2000);
+    return () => clearInterval(timer);
+  }, [images.length]);
+
+  return (
+    <motion.div
+      animate={{ y: yBounce }}
+      transition={{ repeat: Infinity, duration: 7, ease: "easeInOut" }}
+      className={`w-full rounded-2xl overflow-hidden border-2 border-amber-500/80 shadow-[0_0_20px_rgba(245,158,11,0.25)] aspect-[16/10] relative group z-10 bg-black ${className}`}
+    >
+      <AnimatePresence initial={false}>
+        {images.length > 0 ? (
+          <motion.div key={currentIndex} className="absolute inset-0 w-full h-full">
+            <motion.img
+              src={images[currentIndex]}
+              alt={labels[currentIndex] || "Premium Farmland Project"}
+              initial={{ opacity: 0, scale: 1.05 }}
+              animate={{ opacity: 1, scale: 1.15 }}
+              exit={{ opacity: 0 }}
+              transition={{ opacity: { duration: 1.2 }, scale: { duration: 8, ease: "linear" } }}
+              className="absolute inset-0 w-full h-full object-cover origin-center"
+            />
+
+          </motion.div>
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center text-zinc-600 text-sm">
+            No image available
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Soft premium shadow overlay */}
+      <div className={`absolute inset-0 bg-gradient-to-t pointer-events-none z-20 ${children ? 'from-black/90 via-black/60 to-black/40' : 'from-black/60 via-transparent to-transparent'}`} />
+
+      {children && (
+        <div className="absolute inset-0 z-30 flex flex-col justify-center items-center text-center p-4 sm:p-6 bg-black/20">
+          {children}
+        </div>
+      )}
+    </motion.div>
+  );
+}
+
+function AnimatedNumber({ value }: { value: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+
+  const numValue = parseInt(value.replace(/,/g, '').replace('+', ''), 10);
+  const suffix = value.includes('+') ? '+' : '';
+
+  useEffect(() => {
+    if (isInView && ref.current && !isNaN(numValue)) {
+      const controls = animate(0, numValue, {
+        duration: 2.5,
+        ease: "easeOut",
+        onUpdate(v) {
+          if (ref.current) {
+            ref.current.textContent = Intl.NumberFormat("en-US").format(Math.floor(v)) + suffix;
+          }
+        },
+      });
+      return () => controls.stop();
+    }
+  }, [isInView, numValue, suffix]);
+
+  return <span ref={ref}>0{suffix}</span>;
+}
+
+interface HomeProps {
+  setActivePage: (page: PageId) => void;
+  onBookClick: () => void;
+}
+
+export default function Home({ setActivePage, onBookClick }: HomeProps) {
+  const heroRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: heroScroll } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"]
+  });
+
+  const yLeft = useTransform(heroScroll, [0, 1], ["0%", "15%"]);
+  const yRight = useTransform(heroScroll, [0, 1], ["0%", "25%"]);
+
+  const [dynamicLeftImages, setDynamicLeftImages] = useState<string[]>([]);
+  const [dynamicRightImages, setDynamicRightImages] = useState<string[]>([]);
+  const [dynamicProjects, setDynamicProjects] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchHeroImages = async () => {
+      try {
+        const response = await fetch('/api/hero-images');
+        if (response.ok) {
+          const data = await response.json();
+          const lefts = data.filter((img: any) => img.side === 'left').map((img: any) => img.image_path);
+          const rights = data.filter((img: any) => img.side === 'right').map((img: any) => img.image_path);
+          setDynamicLeftImages(lefts);
+          setDynamicRightImages(rights);
+        }
+      } catch (err) {
+        console.error('Failed to fetch dynamic hero images:', err);
+      }
+    };
+    
+    const fetchProjects = async () => {
+      try {
+        const response = await fetch(`/api/projects?home=true&t=${new Date().getTime()}`, { cache: 'no-store' });
+        if (response.ok) {
+          const data = await response.json();
+          // Parse JSON fields
+          const formattedData = data.map((proj: any) => ({
+            ...proj,
+            images: typeof proj.images === 'string' ? JSON.parse(proj.images) : proj.images,
+            highlights: typeof proj.highlights === 'string' ? JSON.parse(proj.highlights) : proj.highlights,
+          }));
+          setDynamicProjects(formattedData);
+        }
+      } catch (err) {
+        console.error('Failed to fetch projects:', err);
+      }
+    };
+
+    fetchHeroImages();
+    fetchProjects();
+  }, []);
+
+
+  const finalLeftImages = dynamicLeftImages;
+  const finalLeftLabels = dynamicLeftImages.length > 0 ? Array(dynamicLeftImages.length).fill("SK Farmland Community") : [];
+
+  const finalRightImages = dynamicRightImages;
+  const finalRightLabels = dynamicRightImages.length > 0 ? Array(dynamicRightImages.length).fill("Premium Lifestyle") : [];
+
+  // Animation presets
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.1,
+      },
+    },
+  };
+
+  const sectionVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: [0.16, 1, 0.3, 1],
+        staggerChildren: 0.1,
+        delayChildren: 0.05,
+      },
+    },
+  };
+
+  const iconMap = (iconName: string) => {
+    switch (iconName) {
+      case 'Map': return <Map className="text-orange-500 w-6 h-6 stroke-[1.5]" />;
+      case 'Users': return <Users className="text-orange-500 w-6 h-6 stroke-[1.5]" />;
+      case 'Leaf': return <Leaf className="text-orange-500 w-6 h-6 stroke-[1.5]" />;
+      case 'Home': return <HomeIcon className="text-orange-500 w-6 h-6 stroke-[1.5]" />;
+      case 'Award': return <Award className="text-orange-500 w-6 h-6 stroke-[1.5]" />;
+      default: return <Leaf className="text-orange-500 w-6 h-6" />;
+    }
+  };
+
+  return (
+    <motion.div
+      id="home-page-container"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="space-y-6 pb-12"
+    >
+
+      {/* 1. Hero / Splash Section */}
+      <section ref={heroRef} id="hero-section" className="relative overflow-hidden pt-4 pb-4">
+        {/* Ambient radial orange glow background decoration */}
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[550px] h-[550px] bg-orange-500/5 rounded-full blur-3xl pointer-events-none z-0" />
+
+        <div className="relative z-10 mx-auto max-w-6xl xl:max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1600px] 2xl:max-w-[1400px] px-4 grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 pt-0">
+
+          {/* Top Hero Image Column: Infrastructure Carousel */}
+          <motion.div style={{ y: yLeft }}>
+            <HeroCarousel
+              images={finalLeftImages}
+              labels={finalLeftLabels}
+              yBounce={[0, -6, 0]}
+            >
+            </HeroCarousel>
+          </motion.div>
+
+          {/* Bottom Hero Image Column: Scenic/Community Carousel */}
+          <motion.div style={{ y: yRight }}>
+            <HeroCarousel
+              images={finalRightImages}
+              labels={finalRightLabels}
+              yBounce={[0, 6, 0]}
+            />
+          </motion.div>
+
+        </div>
+      </section>
+
+      {/* 2. Trust Stats Strip */}
+      <motion.section
+        id="stats-section"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        variants={sectionVariants}
+        className="relative z-10 px-4"
+      >
+        <div className="mx-auto max-w-6xl xl:max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1600px] 2xl:max-w-[1400px] bg-[#090909] border-2 border-orange-600 hover:border-orange-500 transition-colors rounded-2xl p-6 md:p-8 shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
+          <div className="text-left mb-6">
+            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-orange-500 font-mono">
+              Our Legacy in Figures
+            </span>
+            <h2 className="text-2xl font-bold text-white tracking-tight mt-1">
+              Trusted by Families & Investors across India
+            </h2>
+          </div>
+
+          <div className="w-full relative mt-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 py-2">
+              {statsData.map((stat, i) => (
+                <motion.div
+                  key={i}
+                  variants={{
+                    hidden: { opacity: 0, y: 30 },
+                    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
+                  }}
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  className="flex flex-col items-center p-5 bg-zinc-950/60 rounded-xl border-2 border-amber-500 hover:border-amber-400 hover:shadow-[0_0_20px_rgba(251,191,36,0.4)] transition-all duration-300 w-full"
+                >
+                  <motion.div
+                    animate={{ y: [0, -6, 0] }}
+                    transition={{ repeat: Infinity, duration: 3.5 + (i % statsData.length) * 0.5, ease: "easeInOut" }}
+                    className="p-3 bg-amber-500/10 rounded-full border border-amber-500/30 mb-3 text-amber-500"
+                  >
+                    {iconMap(stat.icon)}
+                  </motion.div>
+                  <span className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                    <AnimatedNumber value={stat.value} />
+                  </span>
+                  <span className="text-[10px] sm:text-xs text-zinc-500 mt-2 uppercase font-semibold tracking-wide text-center">
+                    {stat.label}
+                  </span>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Section 1: Own Your Dream Farmland */}
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        variants={sectionVariants}
+        className="mx-auto max-w-6xl xl:max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1600px] 2xl:max-w-[1400px] px-4 py-4 space-y-4 text-left"
+      >
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-orange-500/10 rounded-full border border-white text-orange-400 font-mono text-xs uppercase tracking-widest">
+          <Leaf size={14} className="animate-pulse" />
+          Own Your Dream Farmland
+        </div>
+        <motion.h2 
+          className="text-3xl sm:text-5xl font-extrabold tracking-tight uppercase flex flex-wrap gap-x-3 gap-y-2 mt-4"
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.15 } }
+          }}
+        >
+          {["LIFESTYLE", "|", "INVESTMENT", "|", "EXTRA", "INCOME"].map((word, i) => (
+            <motion.span
+              key={i}
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
+              }}
+              className={word === "INVESTMENT" || word === "INCOME" || word === "LIFESTYLE" ? "bg-gradient-to-r from-yellow-400 to-amber-600 bg-clip-text text-transparent drop-shadow-sm" : (word === "|" ? "text-zinc-600 font-light" : "text-white")}
+            >
+              {word}
+            </motion.span>
+          ))}
+        </motion.h2>
+        <div className="space-y-4 text-sm sm:text-base text-zinc-400 leading-relaxed text-left max-w-4xl xl:max-w-6xl 2xl:max-w-7xl">
+          <p>
+            Premium farmland projects available near to Anekal Thalli Road towards Hoganekkal Road & which are very near to Electronic City, Jigani, Chandapur, Bannerghatta road, Kanakapura Road & Hosur (peaceful & high-growth location).
+          </p>
+          <p>
+            At SK Farmland Developers, we offer farmland solutions designed for personal use, investment, and income generation. Whether you want peaceful living in nature or long-term returns, we make the process simple, secure, and transparent.
+          </p>
+        </div>
+      </motion.section>
+
+      {/* Section 2: Experience True Nature Living */}
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        variants={sectionVariants}
+        className="mx-auto max-w-6xl xl:max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1600px] 2xl:max-w-[1400px] px-4 py-4"
+      >
+        <div className="bg-zinc-950 border-2 border-orange-600 rounded-2xl p-6 md:p-10 hover:border-orange-500 transition-colors shadow-2xl relative overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
+          <motion.h2 
+            className="text-2xl sm:text-4xl font-extrabold tracking-tight mb-6 flex flex-wrap gap-x-2"
+            variants={{
+              hidden: {},
+              visible: { transition: { staggerChildren: 0.12 } }
+            }}
+          >
+            <span className="text-2xl sm:text-4xl mr-2">🌄</span>
+            {["Experience", "True", "Nature", "Living"].map((word, i) => (
+              <motion.span
+                key={i}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
+                }}
+                className={word === "Nature" || word === "Living" ? "bg-gradient-to-r from-yellow-400 to-amber-600 bg-clip-text text-transparent" : "text-white"}
+              >
+                {word}
+              </motion.span>
+            ))}
+          </motion.h2>
+          <div className="space-y-5 text-sm sm:text-base text-zinc-400 leading-relaxed relative z-10">
+            <p>Imagine living far away from the hustle and bustle of the city — surrounded by pure nature, undisturbed, and completely free from pollution.</p>
+            <p>Wake up to the sound of birds, breathe in fresh air, and enjoy wide open spaces where you can grow your own food, walk among greenery, and reconnect with a healthier lifestyle.</p>
+            <p>Our farmland is ideal for cultivating crops such as mango, guava, papaya, banana, sugarcane, vegetables, and seasonal grains, supported by fertile soil and water availability.</p>
+            <p>You can also keep animals like chickens, cows, dogs, sheep, goats, or birds, making your land not just an investment—but a complete countryside experience.</p>
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Section 3: What We Offer */}
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        variants={sectionVariants}
+        className="mx-auto max-w-6xl xl:max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1600px] 2xl:max-w-[1400px] px-4 py-6 space-y-6"
+      >
+        <div className="text-left space-y-3">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight flex items-center gap-3">
+            <span className="text-2xl">🌱</span> What We Offer
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="bg-zinc-950 border-2 border-orange-600 rounded-2xl p-6 hover:border-orange-500 transition-colors">
+            <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+              🏡 Farmland
+            </h3>
+            <div className="h-px w-full bg-orange-600 my-4" />
+            <p className="text-sm text-zinc-300 font-semibold mb-4">
+              Plot Size Starts From 0.25 Quarter Acre, 0.5 Half Acre, or 1–2 Acres)
+            </p>
+            <p className="text-orange-400 font-mono text-xs font-bold uppercase tracking-wider">
+              One Plot – One Owner – Complete Freedom
+            </p>
+          </div>
+
+          <div className="bg-gradient-to-b from-zinc-900 to-zinc-950 border-2 border-orange-600 rounded-2xl p-6 shadow-[0_0_20px_rgba(249,115,22,0.1)] relative hover:border-orange-500 transition-colors">
+            <div className="absolute top-0 right-6 -translate-y-1/2 bg-orange-500 text-white border border-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full">
+              Hassle-Free Option
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+              🌾 Managed Farmland
+            </h3>
+            <div className="h-px w-full bg-orange-600 my-4" />
+            <ul className="space-y-3 text-sm text-zinc-400">
+              {['Maintenance, plantation & basic upkeep handled', '35 plants with drip irrigation system', 'Individual water connection for each plot', 'Picket compound fencing in front of each plot for better layout appearance', '24/7 security', 'Internal Access Road', 'Cement Concrete Roads', 'Solar street lights', 'Ideal for investment without daily involvement'].map((f, i) => (
+                <li key={i} className="flex gap-2 items-start">
+                  <Check size={16} className="text-orange-500 shrink-0 mt-0.5" />
+                  <span className="leading-tight">{f}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="bg-zinc-950 border-2 border-orange-600 rounded-2xl p-6 hover:border-orange-500 transition-colors">
+            <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+              🌿 Plain Farmland
+            </h3>
+            <p className="text-xs text-zinc-500 uppercase tracking-widest mb-2">(Without Development)</p>
+            <div className="h-px w-full bg-orange-600 my-4" />
+            <ul className="space-y-3 text-sm text-zinc-400">
+              {['Budget-friendly land options', 'Freedom to develop as per your choice', 'Suitable for long-term investment and future development'].map((f, i) => (
+                <li key={i} className="flex gap-2 items-start">
+                  <Check size={16} className="text-orange-500 shrink-0 mt-0.5" />
+                  <span className="leading-tight">{f}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Section 4: Value and Pricing */}
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        variants={sectionVariants}
+        className="mx-auto max-w-6xl xl:max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1600px] 2xl:max-w-[1400px] px-4 py-6"
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 bg-[#090909] border-2 border-orange-600 rounded-2xl p-6 md:p-8 hover:border-orange-500 transition-colors">
+            <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+              <span className="text-2xl">💰</span> Earn Income From Your Farmland
+            </h2>
+            <ul className="space-y-4 text-sm sm:text-base text-zinc-400 mb-6">
+              <li className="flex gap-3 items-start">
+                <span className="text-orange-500 mt-1">👉</span>
+                <span>Build your farmhouse as per your budget & style</span>
+              </li>
+              <li className="flex gap-3 items-start">
+                <span className="text-orange-500 mt-1">👉</span>
+                <span>Build your Dream FARM HOUSE & earn extra income with platforms like Airbnb or farm stay</span>
+              </li>
+              <li className="flex gap-3 items-start">
+                <span className="text-orange-500 mt-1">👉</span>
+                <span>Generate rental income from weekend stays & tourists</span>
+              </li>
+            </ul>
+            <div className="inline-block px-4 py-2 bg-orange-500/10 border border-white text-white rounded-lg text-sm font-semibold">
+              Turn your farmland into a lifestyle asset + income source.
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-br from-orange-900/40 to-black border-2 border-orange-600 rounded-2xl p-6 md:p-8 shadow-[0_0_20px_rgba(249,115,22,0.1)] flex flex-col justify-center text-center hover:border-orange-500 transition-colors">
+            <h2 className="text-xl font-bold text-white mb-6 flex items-center justify-center gap-2">
+              <span className="text-xl">💵</span> Investment Range
+            </h2>
+            <div className="text-2xl md:text-3xl font-extrabold text-orange-400 tracking-tight mb-2 flex flex-wrap justify-center items-center gap-2">
+              👉 <span className="[-webkit-text-stroke:0.5px_white]">₹499/- to ₹849/-</span> <span className="text-sm font-medium text-zinc-400">per sq.ft</span>
+            </div>
+            <p className="text-xs sm:text-sm text-zinc-400 font-mono mt-4">
+              (Price subject to change based on project and location)
+            </p>
+          </div>
+
+          <div className="lg:col-span-3 bg-zinc-950 border-2 border-orange-600 rounded-2xl p-6 md:p-8 hover:border-orange-500 transition-colors">
+            <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+              <span className="text-2xl">🏡</span> Why Choose SK Farmland Developers
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-6">
+              {['100% Clear Title & Legal Verification', 'Options: Private, Managed & Plain Land', 'Projects available near Bangalore & Pondicherry', 'Prime locations with good road connectivity', 'Transparent & hassle-free process', 'Complete guidance from booking to registration'].map((f, i) => (
+                <div key={i} className="flex gap-4 items-start group">
+                  <div className="bg-orange-500/10 p-2 rounded-full group-hover:bg-orange-500/20 transition-colors shrink-0">
+                    <Check size={16} className="text-orange-500 shrink-0" />
+                  </div>
+                  <span className="text-sm font-medium text-zinc-300 leading-snug mt-1 break-words">{f}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Section 5: Experience & CTA */}
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        variants={sectionVariants}
+        className="mx-auto max-w-6xl xl:max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1600px] 2xl:max-w-[1400px] px-4 py-6"
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="bg-[#090909] border-2 border-orange-600 rounded-2xl p-8 flex flex-col justify-center hover:border-orange-500 transition-colors">
+            <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+              <span className="text-2xl">🌄</span> Experience Nature Your Way
+            </h2>
+            <ul className="space-y-4 text-sm md:text-base text-zinc-300">
+              <li>Build your dream farmhouse 🏡</li>
+              <li>Enjoy peaceful weekend living 🌿</li>
+              <li>Earn rental income 💰</li>
+              <li>Invest in appreciating land 📈</li>
+            </ul>
+            <p className="text-orange-400 font-semibold mt-6 uppercase tracking-wider text-sm">
+              Choose managed farmland for worry-free ownership
+            </p>
+          </div>
+
+          <div className="bg-gradient-to-tr from-zinc-900 to-zinc-950 border-2 border-orange-600 rounded-2xl p-8 flex flex-col justify-center items-center text-center shadow-[0_5px_30px_rgba(249,115,22,0.06)] relative overflow-hidden hover:border-orange-500 transition-colors">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/5 rounded-full blur-3xl pointer-events-none" />
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-orange-500 font-mono mb-4">
+              📍 Start Your Journey Today
+            </span>
+            <div className="space-y-4 flex flex-col items-start mx-auto w-fit">
+              <div className="flex items-center gap-3 text-white text-sm md:text-base font-semibold">
+                <span className="text-orange-500 shrink-0">👉</span> <span>Explore our projects</span>
+              </div>
+              <div className="flex items-center gap-3 text-white text-sm md:text-base font-semibold">
+                <span className="text-orange-500 shrink-0">👉</span> <span>Choose the farmland that suits your needs</span>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Projects Section */}
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        variants={sectionVariants}
+        className="mx-auto max-w-6xl xl:max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1600px] 2xl:max-w-[1400px] px-4 py-6 space-y-6"
+      >
+        <div className="text-left space-y-3">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+            Projects
+          </h2>
+          <p className="text-sm sm:text-base text-zinc-400 max-w-3xl xl:max-w-5xl 2xl:max-w-6xl leading-relaxed">
+            Experience premium farmland living with thoughtfully planned infrastructure, natural surroundings, and modern amenities.
+          </p>
+        </div>
+
+        {dynamicProjects.length > 0 ? (
+          dynamicProjects.map((project, idx) => (
+            <motion.div 
+              key={project.id}
+              initial={{ opacity: 0, y: 50, scale: 0.95 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, amount: 0.1 }}
+              transition={{ duration: 0.6, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={{ 
+                scale: 1.02, 
+                rotateX: 2, 
+                rotateY: -2, 
+                boxShadow: "0 25px 50px -12px rgba(249, 115, 22, 0.25)"
+              }}
+              style={{ perspective: 1000 }}
+              className="bg-[#090909] border-2 border-orange-600 rounded-2xl p-6 md:p-10 shadow-[0_8px_30px_rgba(0,0,0,0.5)] hover:border-orange-500 transition-colors mt-6"
+            >
+              <h3 className="text-2xl sm:text-3xl font-bold text-white mb-6">{project.name}</h3>
+              
+              {project.images && project.images.length > 0 && (
+                <div className="mb-8">
+                  <HeroCarousel
+                    images={project.images}
+                    labels={Array(project.images.length).fill(project.name)}
+                    yBounce={[0, 0, 0]}
+                    className="!aspect-[4/3] md:!aspect-[16/10] max-h-[700px]"
+                  />
+                </div>
+              )}
+  
+              <div className="space-y-6">
+                <h4 className="text-xl font-bold text-orange-500 flex items-center gap-2">
+                  🌿 Project Highlights
+                </h4>
+                
+                <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm md:text-base text-zinc-300">
+                  {project.highlights && project.highlights.map((highlight: string, i: number) => (
+                    <li key={i} className="flex items-start gap-2">
+                      <Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> 
+                      <span>{highlight}</span>
+                    </li>
+                  ))}
+                </ul>
+  
+                {( (project.price && project.price.trim() !== '') || (project.bank_loan && project.bank_loan.trim() !== '') ) && (
+                  <div className="mt-8 p-6 bg-zinc-950/80 border-2 border-orange-600 hover:border-orange-500 transition-colors rounded-xl flex flex-col md:flex-row gap-6 justify-between items-center">
+                    <div>
+                      <h5 className="text-lg font-bold text-white mb-1">Pricing</h5>
+                      <p className="text-orange-400 font-semibold text-xl">{project.price || 'Contact for price'}</p>
+                    </div>
+                    <div className="text-left md:text-right">
+                      <h5 className="text-lg font-bold text-white mb-1">Bank Loan</h5>
+                      <p className="text-zinc-400 font-medium">{project.bank_loan || 'Not Available'}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          ))
+        ) : (
+          <div className="text-center py-20 text-zinc-500">
+            <p>No projects available at the moment. Please check back later.</p>
+          </div>
+        )}
+      </motion.section>
+
+    </motion.div>
+  );
+}
