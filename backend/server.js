@@ -320,6 +320,11 @@ async function initDb() {
     try { await db.query(`ALTER TABLE projects ADD COLUMN sub_heading VARCHAR(255) AFTER name`); } catch (err) {}
     try { await db.query(`ALTER TABLE hero_images ADD COLUMN display_order INT DEFAULT 0`); } catch (err) {}
 
+    // Ensure all image columns are LONGTEXT to prevent truncation of Base64 strings
+    try { await db.query(`ALTER TABLE projects MODIFY COLUMN images LONGTEXT`); } catch (err) {}
+    try { await db.query(`ALTER TABLE gallery MODIFY COLUMN image LONGTEXT`); } catch (err) {}
+    try { await db.query(`ALTER TABLE hero_images MODIFY COLUMN image_path LONGTEXT`); } catch (err) {}
+
     try {
       await db.query(`
         CREATE TABLE IF NOT EXISTS gallery (

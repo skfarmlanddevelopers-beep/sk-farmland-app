@@ -140,7 +140,7 @@ export default function GalleryManager() {
               <div key={img.id} className="flex items-center gap-4 bg-zinc-950 p-3 rounded-lg border border-zinc-800">
                 <img src={img.image} alt="Gallery" className="w-20 h-20 object-cover rounded" />
                 <div className="flex-1 overflow-hidden">
-                  <p className="text-xs text-zinc-400 break-all">{img.image}</p>
+                  <p className="text-xs text-zinc-400 font-mono italic">Base64 Image Data</p>
                 </div>
                 <button
                   onClick={() => handleDelete(img.id)}

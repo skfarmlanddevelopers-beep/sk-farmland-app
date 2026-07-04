@@ -201,7 +201,7 @@ export default function HeroImagesManager() {
                 <div key={img.id} className="flex items-center gap-4 bg-zinc-950 p-3 rounded-lg border border-zinc-800">
                   <img src={img.image_path} alt="Left Hero" className="w-20 h-14 object-cover rounded" />
                   <div className="flex-1">
-                    <p className="text-sm text-zinc-300 break-all">{img.image_path}</p>
+                    <p className="text-sm text-zinc-300 font-mono italic">Base64 Image Data</p>
                     <div className="flex items-center mt-1 gap-2">
                       <label className="text-xs text-zinc-500">Order:</label>
                       <input 
@@ -235,7 +235,7 @@ export default function HeroImagesManager() {
                 <div key={img.id} className="flex items-center gap-4 bg-zinc-950 p-3 rounded-lg border border-zinc-800">
                   <img src={img.image_path} alt="Right Hero" className="w-20 h-14 object-cover rounded" />
                   <div className="flex-1">
-                    <p className="text-sm text-zinc-300 break-all">{img.image_path}</p>
+                    <p className="text-sm text-zinc-300 font-mono italic">Base64 Image Data</p>
                     <div className="flex items-center mt-1 gap-2">
                       <label className="text-xs text-zinc-500">Order:</label>
                       <input 
