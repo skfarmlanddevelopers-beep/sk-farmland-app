@@ -16,28 +16,20 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// Ensure upload directory exists
-// SECURITY/DEPLOYMENT FIX: Use os.homedir() to store uploads OUTSIDE the git repository.
-// This prevents Hostinger's git deployment from wiping the images every time a push happens.
-const uploadDir = path.join(os.homedir(), 'sk-farmland-uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
-  }
+// Configure multer for file uploads in memory (to convert to base64)
+const storage = multer.memoryStorage();
+const upload = multer({ 
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
 });
-const upload = multer({ storage });
 
-// Serve uploaded files statically
-app.use('/uploads', express.static(uploadDir));
+// Helper function to convert buffer to base64 data URL
+const getBase64DataUrl = (file) => {
+  if (!file) return null;
+  const b64 = file.buffer.toString('base64');
+  return `data:${file.mimetype};base64,${b64}`;
+};
+
 
 
 
@@ -138,14 +130,14 @@ app.post('/api/gallery', upload.array('images', 20), async (req, res) => {
     }
     const uploadedPaths = [];
     for (const file of req.files) {
-      const imagePath = `/uploads/${file.filename}`;
+      const b64DataUrl = getBase64DataUrl(file);
       const id = Date.now().toString() + Math.random().toString(36).substring(7);
       const title = 'Custom Upload';
       const category = 'Custom';
       const description = '';
       
-      await db.query('INSERT INTO gallery (id, title, category, image, description) VALUES (?, ?, ?, ?, ?)', [id, title, category, imagePath, description]);
-      uploadedPaths.push(imagePath);
+      await db.query('INSERT INTO gallery (id, title, category, image, description) VALUES (?, ?, ?, ?, ?)', [id, title, category, b64DataUrl, description]);
+      uploadedPaths.push(b64DataUrl);
     }
     res.json({ success: true, image_paths: uploadedPaths });
   } catch (err) {
@@ -157,17 +149,6 @@ app.post('/api/gallery', upload.array('images', 20), async (req, res) => {
 app.delete('/api/gallery/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const [rows] = await db.query('SELECT image FROM gallery WHERE id = ?', [id]);
-    if (rows.length > 0) {
-      const imagePath = rows[0].image;
-      if (imagePath && imagePath.startsWith('/uploads/')) {
-        const filename = imagePath.split('/').pop();
-        const fullPath = path.join(uploadDir, filename);
-        if (fs.existsSync(fullPath)) {
-          fs.unlinkSync(fullPath);
-        }
-      }
-    }
     await db.query('DELETE FROM gallery WHERE id = ?', [id]);
     res.json({ success: true });
   } catch (err) {
@@ -198,9 +179,9 @@ app.post('/api/hero-images', upload.array('images', 20), async (req, res) => {
     }
     const uploadedPaths = [];
     for (const file of req.files) {
-      const imagePath = `/uploads/${file.filename}`;
-      await db.query('INSERT INTO hero_images (side, image_path) VALUES (?, ?)', [side, imagePath]);
-      uploadedPaths.push(imagePath);
+      const b64DataUrl = getBase64DataUrl(file);
+      await db.query('INSERT INTO hero_images (side, image_path) VALUES (?, ?)', [side, b64DataUrl]);
+      uploadedPaths.push(b64DataUrl);
     }
     res.json({ success: true, image_paths: uploadedPaths });
   } catch (err) {
@@ -212,16 +193,6 @@ app.post('/api/hero-images', upload.array('images', 20), async (req, res) => {
 app.delete('/api/hero-images/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const [rows] = await db.query('SELECT image_path FROM hero_images WHERE id = ?', [id]);
-    if (rows.length > 0) {
-      const imagePath = rows[0].image_path;
-      // imagePath is like "/uploads/123.jpg", we need to map to physical file
-      const filename = imagePath.split('/').pop();
-      const fullPath = path.join(uploadDir, filename);
-      if (fs.existsSync(fullPath)) {
-        fs.unlinkSync(fullPath);
-      }
-    }
     await db.query('DELETE FROM hero_images WHERE id = ?', [id]);
     res.json({ success: true });
   } catch (err) {
@@ -448,8 +419,8 @@ app.post('/api/projects', upload.array('images', 15), async (req, res) => {
       return res.status(400).json({ error: 'Project name is required' });
     }
     
-    // Process uploaded images
-    const imagePaths = req.files ? req.files.map(f => `/uploads/${f.filename}`) : [];
+    // Process uploaded images to base64
+    const imagePaths = req.files ? req.files.map(f => getBase64DataUrl(f)) : [];
     
     // Parse highlights
     let parsedHighlights = [];
@@ -506,31 +477,19 @@ app.put('/api/projects/:id', upload.array('images', 15), async (req, res) => {
     const isShowOnHome = show_on_home === 'true' || show_on_home === true;
 
     if (req.files && req.files.length > 0) {
-      // New images uploaded, delete old ones
-      const [rows] = await db.query('SELECT images FROM projects WHERE id = ?', [id]);
-      if (rows.length > 0) {
-        const oldImages = typeof rows[0].images === 'string' ? JSON.parse(rows[0].images) : rows[0].images;
-        oldImages.forEach(img => {
-          const filename = img.split('/').pop();
-          const fullPath = path.join(uploadDir, filename);
-          if (fs.existsSync(fullPath)) fs.unlinkSync(fullPath);
-        });
-      }
-
-      const imagePaths = req.files.map(f => `/uploads/${f.filename}`);
+      // New images uploaded
+      const imagePaths = req.files.map(f => getBase64DataUrl(f));
       await db.query(
         'UPDATE projects SET name = ?, price = ?, bank_loan = ?, images = ?, highlights = ?, show_on_home = ? WHERE id = ?',
         [name, price || '', bank_loan || '', JSON.stringify(imagePaths), JSON.stringify(parsedHighlights), isShowOnHome, id]
       );
-      res.json({ success: true, updatedWithImages: true });
     } else {
-      // No new images, just update text
       await db.query(
         'UPDATE projects SET name = ?, price = ?, bank_loan = ?, highlights = ?, show_on_home = ? WHERE id = ?',
         [name, price || '', bank_loan || '', JSON.stringify(parsedHighlights), isShowOnHome, id]
       );
-      res.json({ success: true, updatedWithImages: false });
     }
+    res.json({ success: true });
   } catch (err) {
     console.error('Error updating project:', err);
     res.status(500).json({ error: 'Failed to update project' });
@@ -556,15 +515,8 @@ app.delete('/api/projects/:id/image', async (req, res) => {
 
     const updatedImages = images.filter(img => img !== imageUrl);
 
-    // Delete the file from filesystem
-    const filename = imageUrl.split('/').pop();
-    const filePath = path.join(uploadDir, filename);
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-    }
-
     await db.query('UPDATE projects SET images = ? WHERE id = ?', [JSON.stringify(updatedImages), id]);
-    res.json({ success: true, updatedImages });
+    res.json({ success: true });
   } catch (err) {
     console.error('Error deleting project image:', err);
     res.status(500).json({ error: 'Failed to delete image' });
@@ -577,18 +529,6 @@ app.delete('/api/projects/:id', async (req, res) => {
     const [rows] = await db.query('SELECT images FROM projects WHERE id = ?', [id]);
     if (rows.length === 0) {
       return res.status(404).json({ error: 'Project not found' });
-    }
-    
-    // Delete files
-    const images = typeof rows[0].images === 'string' ? JSON.parse(rows[0].images) : rows[0].images;
-    if (Array.isArray(images)) {
-      images.forEach(imgPath => {
-        const filename = imgPath.split('/').pop();
-        const filePath = path.join(uploadDir, filename);
-        if (fs.existsSync(filePath)) {
-          fs.unlinkSync(filePath);
-        }
-      });
     }
     
     await db.query('DELETE FROM projects WHERE id = ?', [id]);
