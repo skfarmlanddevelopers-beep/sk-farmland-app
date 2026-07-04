@@ -3,6 +3,8 @@ import { motion, useScroll, useTransform, AnimatePresence, useInView, animate } 
 import { Leaf, Award, Map, Users, Home as HomeIcon, Check, Calendar, MessageCircle } from 'lucide-react';
 import { PageId } from '../types';
 import { statsData } from '../data';
+import AnimatedReveal from '../components/AnimatedReveal';
+import AnimatedText from '../components/AnimatedText';
 import heroTop from '../assets/hero-top.jpg';
 import heroBottom from '../assets/hero-bottom.jpg';
 import gallery1 from '../assets/gallery-1.jpeg';
@@ -233,21 +235,14 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
       </section>
 
       {/* 2. Trust Stats Strip */}
-      <motion.section
-        id="stats-section"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-        variants={sectionVariants}
-        className="relative z-10 px-4"
-      >
+      <AnimatedReveal type="3d-flip-x" delay={0.2} duration={0.9} className="relative z-10 px-4">
         <div className="mx-auto max-w-6xl xl:max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1600px] 2xl:max-w-[1400px] bg-[#090909] border-2 border-orange-600 hover:border-orange-500 transition-colors rounded-2xl p-6 md:p-8 shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
           <div className="text-left mb-6">
             <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-orange-500 font-mono">
-              Our Legacy in Figures
+              <AnimatedText type="words" text="Our Legacy in Figures" />
             </span>
             <h2 className="text-2xl font-bold text-white tracking-tight mt-1">
-              Trusted by Families & Investors across India
+              <AnimatedText type="typing" text="Trusted by Families & Investors across India" />
             </h2>
           </div>
 
@@ -281,16 +276,10 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
             </div>
           </div>
         </div>
-      </motion.section>
+      </AnimatedReveal>
 
       {/* Section 1: Own Your Dream Farmland */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-        variants={sectionVariants}
-        className="mx-auto max-w-6xl xl:max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1600px] 2xl:max-w-[1400px] px-4 py-4 space-y-4 text-left"
-      >
+      <AnimatedReveal type="slide" direction="up" delay={0.1} duration={0.8} className="mx-auto max-w-6xl xl:max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1600px] 2xl:max-w-[1400px] px-4 py-4 space-y-4 text-left">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-orange-500/10 rounded-full border border-white text-orange-400 font-mono text-xs uppercase tracking-widest">
           <Leaf size={14} className="animate-pulse" />
           Own Your Dream Farmland
@@ -299,17 +288,17 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
           className="text-3xl sm:text-5xl font-extrabold tracking-tight uppercase flex flex-wrap gap-x-3 gap-y-2 mt-4"
           variants={{
             hidden: {},
-            visible: { transition: { staggerChildren: 0.15 } }
+            visible: { transition: { staggerChildren: 0.12 } }
           }}
         >
-          {["LIFESTYLE", "|", "INVESTMENT", "|", "EXTRA", "INCOME"].map((word, i) => (
+          {["AN", "INVESTMENT", "FOR", "INCOME,", "|", "A", "PLACE", "FOR", "LIFESTYLE"].map((word, i) => (
             <motion.span
               key={i}
               variants={{
                 hidden: { opacity: 0, y: 20 },
                 visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }
               }}
-              className={word === "INVESTMENT" || word === "INCOME" || word === "LIFESTYLE" ? "bg-gradient-to-r from-yellow-400 to-amber-600 bg-clip-text text-transparent drop-shadow-sm" : (word === "|" ? "text-zinc-600 font-light" : "text-white")}
+              className={word === "INVESTMENT" || word === "INCOME," || word === "LIFESTYLE" ? "bg-gradient-to-r from-yellow-400 to-amber-600 bg-clip-text text-transparent drop-shadow-sm" : (word === "|" ? "text-zinc-600 font-light" : "text-white")}
             >
               {word}
             </motion.span>
@@ -317,24 +306,18 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
         </motion.h2>
         <div className="space-y-4 text-sm sm:text-base text-zinc-400 leading-relaxed text-left max-w-4xl xl:max-w-6xl 2xl:max-w-7xl">
           <p>
-            Premium farmland projects available near to Anekal Thalli Road towards Hoganekkal Road & which are very near to Electronic City, Jigani, Chandapur, Bannerghatta road, Kanakapura Road & Hosur (peaceful & high-growth location).
+            <AnimatedText type="typing" text="Premium farmland projects available near to Anekal Thalli Road towards Hoganekkal Road & which are very near to Electronic City, Jigani, Chandapur, Bannerghatta road, Kanakapura Road & Hosur (peaceful & high-growth location)." duration={2} />
           </p>
           <p>
-            At SK Farmland Developers, we offer farmland solutions designed for personal use, investment, and income generation. Whether you want peaceful living in nature or long-term returns, we make the process simple, secure, and transparent.
+            <AnimatedText type="typing" text="At SK Farmland Developers, we offer farmland solutions designed for personal use, investment, and income generation. Whether you want peaceful living in nature or long-term returns, we make the process simple, secure, and transparent." duration={2} />
           </p>
         </div>
-      </motion.section>
+      </AnimatedReveal>
 
       {/* Section 2: Experience True Nature Living */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-        variants={sectionVariants}
-        className="mx-auto max-w-6xl xl:max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1600px] 2xl:max-w-[1400px] px-4 py-4"
-      >
-        <div className="bg-zinc-950 border-2 border-orange-600 rounded-2xl p-6 md:p-10 hover:border-orange-500 transition-colors shadow-2xl relative overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
+      <AnimatedReveal type="slide" direction="left" delay={0.2} duration={0.8} className="mx-auto max-w-6xl xl:max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1600px] 2xl:max-w-[1400px] px-4 py-4">
+        <div className="bg-zinc-950 border-2 border-orange-600 rounded-2xl p-6 md:p-10 hover:border-orange-500 transition-colors shadow-[0_20px_50px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_50px_rgba(249,115,22,0.1)] relative overflow-hidden group">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-orange-500/20 transition-all duration-700" />
           <motion.h2 
             className="text-2xl sm:text-4xl font-extrabold tracking-tight mb-6 flex flex-wrap gap-x-2"
             variants={{
@@ -357,22 +340,16 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
             ))}
           </motion.h2>
           <div className="space-y-5 text-sm sm:text-base text-zinc-400 leading-relaxed relative z-10">
-            <p>Imagine living far away from the hustle and bustle of the city — surrounded by pure nature, undisturbed, and completely free from pollution.</p>
-            <p>Wake up to the sound of birds, breathe in fresh air, and enjoy wide open spaces where you can grow your own food, walk among greenery, and reconnect with a healthier lifestyle.</p>
-            <p>Our farmland is ideal for cultivating crops such as mango, guava, papaya, banana, sugarcane, vegetables, and seasonal grains, supported by fertile soil and water availability.</p>
-            <p>You can also keep animals like chickens, cows, dogs, sheep, goats, or birds, making your land not just an investment—but a complete countryside experience.</p>
+            <p><AnimatedText type="typing" text="Imagine living far away from the hustle and bustle of the city — surrounded by pure nature, undisturbed, and completely free from pollution." duration={1.5} /></p>
+            <p><AnimatedText type="typing" text="Wake up to the sound of birds, breathe in fresh air, and enjoy wide open spaces where you can grow your own food, walk among greenery, and reconnect with a healthier lifestyle." duration={2} delay={0.5} /></p>
+            <p><AnimatedText type="typing" text="Our farmland is ideal for cultivating crops such as mango, guava, papaya, banana, sugarcane, vegetables, and seasonal grains, supported by fertile soil and water availability." duration={2} delay={1.0} /></p>
+            <p><AnimatedText type="typing" text="You can also keep animals like chickens, cows, dogs, sheep, goats, or birds, making your land not just an investment—but a complete countryside experience." duration={2} delay={1.5} /></p>
           </div>
         </div>
-      </motion.section>
+      </AnimatedReveal>
 
       {/* Section 3: What We Offer */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-        variants={sectionVariants}
-        className="mx-auto max-w-6xl xl:max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1600px] 2xl:max-w-[1400px] px-4 py-6 space-y-6"
-      >
+      <AnimatedReveal type="slide" direction="up" delay={0.2} duration={0.8} className="mx-auto max-w-6xl xl:max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1600px] 2xl:max-w-[1400px] px-4 py-6 space-y-6">
         <div className="text-left space-y-3">
           <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight flex items-center gap-3">
             <span className="text-2xl">🌱</span> What We Offer
@@ -380,63 +357,63 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="bg-zinc-950 border-2 border-orange-600 rounded-2xl p-6 hover:border-orange-500 transition-colors">
-            <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
-              🏡 Farmland
-            </h3>
-            <div className="h-px w-full bg-orange-600 my-4" />
-            <p className="text-sm text-zinc-300 font-semibold mb-4">
-              Plot Size Starts From 0.25 Quarter Acre, 0.5 Half Acre, or 1–2 Acres)
-            </p>
-            <p className="text-orange-400 font-mono text-xs font-bold uppercase tracking-wider">
-              One Plot – One Owner – Complete Freedom
-            </p>
-          </div>
-
-          <div className="bg-gradient-to-b from-zinc-900 to-zinc-950 border-2 border-orange-600 rounded-2xl p-6 shadow-[0_0_20px_rgba(249,115,22,0.1)] relative hover:border-orange-500 transition-colors">
-            <div className="absolute top-0 right-6 -translate-y-1/2 bg-orange-500 text-white border border-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full">
-              Hassle-Free Option
+          <AnimatedReveal type="3d-flip-x" delay={0.3} className="h-full">
+            <div className="bg-zinc-950 border-2 border-orange-600 rounded-2xl p-6 hover:border-orange-500 transition-colors h-full">
+              <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                🏡 Farmland
+              </h3>
+              <div className="h-px w-full bg-orange-600 my-4" />
+              <p className="text-sm text-zinc-300 font-semibold mb-4">
+                Plot Size Starts From 0.25 Quarter Acre, 0.5 Half Acre, or 1–2 Acres)
+              </p>
+              <p className="text-orange-400 font-mono text-xs font-bold uppercase tracking-wider">
+                One Plot – One Owner – Complete Freedom
+              </p>
             </div>
-            <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
-              🌾 Managed Farmland
-            </h3>
-            <div className="h-px w-full bg-orange-600 my-4" />
-            <ul className="space-y-3 text-sm text-zinc-400">
-              {['Maintenance, plantation & basic upkeep handled', '35 plants with drip irrigation system', 'Individual water connection for each plot', 'Picket compound fencing in front of each plot for better layout appearance', '24/7 security', 'Internal Access Road', 'Cement Concrete Roads', 'Solar street lights', 'Ideal for investment without daily involvement'].map((f, i) => (
-                <li key={i} className="flex gap-2 items-start">
-                  <Check size={16} className="text-orange-500 shrink-0 mt-0.5" />
-                  <span className="leading-tight">{f}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+          </AnimatedReveal>
 
-          <div className="bg-zinc-950 border-2 border-orange-600 rounded-2xl p-6 hover:border-orange-500 transition-colors">
-            <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
-              🌿 Plain Farmland
-            </h3>
-            <p className="text-xs text-zinc-500 uppercase tracking-widest mb-2">(Without Development)</p>
-            <div className="h-px w-full bg-orange-600 my-4" />
-            <ul className="space-y-3 text-sm text-zinc-400">
-              {['Budget-friendly land options', 'Freedom to develop as per your choice', 'Suitable for long-term investment and future development'].map((f, i) => (
-                <li key={i} className="flex gap-2 items-start">
-                  <Check size={16} className="text-orange-500 shrink-0 mt-0.5" />
-                  <span className="leading-tight">{f}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <AnimatedReveal type="3d-flip-x" delay={0.5} className="h-full">
+            <div className="bg-gradient-to-b from-zinc-900 to-zinc-950 border-2 border-orange-600 rounded-2xl p-6 shadow-[0_0_20px_rgba(249,115,22,0.1)] relative hover:border-orange-500 transition-colors h-full">
+              <div className="absolute top-0 right-6 -translate-y-1/2 bg-orange-500 text-white border border-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-[0_0_15px_rgba(249,115,22,0.5)]">
+                Hassle-Free Option
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                🌾 Managed Farmland
+              </h3>
+              <div className="h-px w-full bg-orange-600 my-4" />
+              <ul className="space-y-3 text-sm text-zinc-400">
+                {['Maintenance, plantation & basic upkeep handled', '35 plants with drip irrigation system', 'Individual water connection for each plot', 'Picket compound fencing in front of each plot for better layout appearance', '24/7 security', 'Internal Access Road', 'Cement Concrete Roads', 'Solar street lights', 'Ideal for investment without daily involvement'].map((f, i) => (
+                  <li key={i} className="flex gap-2 items-start">
+                    <Check size={16} className="text-orange-500 shrink-0 mt-0.5" />
+                    <span className="leading-tight">{f}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </AnimatedReveal>
+
+          <AnimatedReveal type="3d-flip-x" delay={0.7} className="h-full">
+            <div className="bg-zinc-950 border-2 border-orange-600 rounded-2xl p-6 hover:border-orange-500 transition-colors h-full">
+              <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                🌿 Plain Farmland
+              </h3>
+              <p className="text-xs text-zinc-500 uppercase tracking-widest mb-2">(Without Development)</p>
+              <div className="h-px w-full bg-orange-600 my-4" />
+              <ul className="space-y-3 text-sm text-zinc-400">
+                {['Budget-friendly land options', 'Freedom to develop as per your choice', 'Suitable for long-term investment and future development'].map((f, i) => (
+                  <li key={i} className="flex gap-2 items-start">
+                    <Check size={16} className="text-orange-500 shrink-0 mt-0.5" />
+                    <span className="leading-tight">{f}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </AnimatedReveal>
         </div>
-      </motion.section>
+      </AnimatedReveal>
 
       {/* Section 4: Value and Pricing */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-        variants={sectionVariants}
-        className="mx-auto max-w-6xl xl:max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1600px] 2xl:max-w-[1400px] px-4 py-6"
-      >
+      <AnimatedReveal type="slide" direction="right" delay={0.2} duration={0.8} className="mx-auto max-w-6xl xl:max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1600px] 2xl:max-w-[1400px] px-4 py-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 bg-[#090909] border-2 border-orange-600 rounded-2xl p-6 md:p-8 hover:border-orange-500 transition-colors">
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
@@ -461,16 +438,18 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-orange-900/40 to-black border-2 border-orange-600 rounded-2xl p-6 md:p-8 shadow-[0_0_20px_rgba(249,115,22,0.1)] flex flex-col justify-center text-center hover:border-orange-500 transition-colors">
-            <h2 className="text-xl font-bold text-white mb-6 flex items-center justify-center gap-2">
-              <span className="text-xl">💵</span> Investment Range
-            </h2>
-            <div className="text-2xl md:text-3xl font-extrabold text-orange-400 tracking-tight mb-2 flex flex-wrap justify-center items-center gap-2">
-              👉 <span className="[-webkit-text-stroke:0.5px_white]">₹499/- to ₹849/-</span> <span className="text-sm font-medium text-zinc-400">per sq.ft</span>
-            </div>
-            <p className="text-xs sm:text-sm text-zinc-400 font-mono mt-4">
-              (Price subject to change based on project and location)
-            </p>
+          <div className="bg-gradient-to-br from-orange-900/40 to-black border-2 border-orange-600 rounded-2xl p-6 md:p-8 shadow-[0_0_20px_rgba(249,115,22,0.1)] flex flex-col justify-center text-center hover:border-orange-500 transition-colors group">
+            <AnimatedReveal type="scale" delay={0.4} duration={0.5}>
+              <h2 className="text-xl font-bold text-white mb-6 flex items-center justify-center gap-2">
+                <span className="text-xl group-hover:animate-bounce">💵</span> Investment Range
+              </h2>
+              <div className="text-2xl md:text-3xl font-extrabold text-orange-400 tracking-tight mb-2 flex flex-wrap justify-center items-center gap-2">
+                👉 <span className="[-webkit-text-stroke:0.5px_white]">₹549/- to ₹999/-</span> <span className="text-sm font-medium text-zinc-400">per sq.ft</span>
+              </div>
+              <p className="text-xs sm:text-sm text-zinc-400 font-mono mt-4">
+                (Price subject to change based on project and location)
+              </p>
+            </AnimatedReveal>
           </div>
 
           <div className="lg:col-span-3 bg-zinc-950 border-2 border-orange-600 rounded-2xl p-6 md:p-8 hover:border-orange-500 transition-colors">
@@ -489,16 +468,10 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
             </div>
           </div>
         </div>
-      </motion.section>
+      </AnimatedReveal>
 
       {/* Section 5: Experience & CTA */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-        variants={sectionVariants}
-        className="mx-auto max-w-6xl xl:max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1600px] 2xl:max-w-[1400px] px-4 py-6"
-      >
+      <AnimatedReveal type="slide" direction="up" delay={0.2} duration={0.8} className="mx-auto max-w-6xl xl:max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1600px] 2xl:max-w-[1400px] px-4 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-[#090909] border-2 border-orange-600 rounded-2xl p-8 flex flex-col justify-center hover:border-orange-500 transition-colors">
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
@@ -517,31 +490,25 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
 
           <div className="bg-gradient-to-tr from-zinc-900 to-zinc-950 border-2 border-orange-600 rounded-2xl p-8 flex flex-col justify-center items-center text-center shadow-[0_5px_30px_rgba(249,115,22,0.06)] relative overflow-hidden hover:border-orange-500 transition-colors">
             <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/5 rounded-full blur-3xl pointer-events-none" />
-            <span className="text-xs font-bold uppercase tracking-[0.2em] text-orange-500 font-mono mb-4">
-              📍 Start Your Journey Today
-            </span>
-            <div className="space-y-4 flex flex-col items-start mx-auto w-fit">
-              <div className="flex items-center gap-3 text-white text-sm md:text-base font-semibold">
-                <span className="text-orange-500 shrink-0">👉</span> <span>Explore our projects</span>
+            <AnimatedReveal type="3d-flip-y" delay={0.4} duration={1}>
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-orange-500 font-mono mb-4 block">
+                📍 Start Your Journey Today
+              </span>
+              <div className="space-y-4 flex flex-col items-start mx-auto w-fit mt-4">
+                <div className="flex items-center gap-3 text-white text-sm md:text-base font-semibold">
+                  <span className="text-orange-500 shrink-0">👉</span> <span>Explore our projects</span>
+                </div>
+                <div className="flex items-center gap-3 text-white text-sm md:text-base font-semibold">
+                  <span className="text-orange-500 shrink-0">👉</span> <span>Choose the farmland that suits your needs</span>
+                </div>
               </div>
-              <div className="flex items-center gap-3 text-white text-sm md:text-base font-semibold">
-                <span className="text-orange-500 shrink-0">👉</span> <span>Choose the farmland that suits your needs</span>
-              </div>
-            </div>
-
-
+            </AnimatedReveal>
           </div>
         </div>
-      </motion.section>
+      </AnimatedReveal>
 
       {/* Projects Section */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-        variants={sectionVariants}
-        className="mx-auto max-w-6xl xl:max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1600px] 2xl:max-w-[1400px] px-4 py-6 space-y-6"
-      >
+      <AnimatedReveal type="slide" direction="up" delay={0.1} duration={0.8} className="mx-auto max-w-6xl xl:max-w-7xl xl:max-w-[1400px] 2xl:max-w-[1600px] 2xl:max-w-[1400px] px-4 py-6 space-y-6">
         <div className="text-left space-y-3">
           <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
             Projects
@@ -553,69 +520,65 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
 
         {dynamicProjects.length > 0 ? (
           dynamicProjects.map((project, idx) => (
-            <motion.div 
-              key={project.id}
-              initial={{ opacity: 0, y: 50, scale: 0.95 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: true, amount: 0.1 }}
-              transition={{ duration: 0.6, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ 
-                scale: 1.02, 
-                rotateX: 2, 
-                rotateY: -2, 
-                boxShadow: "0 25px 50px -12px rgba(249, 115, 22, 0.25)"
-              }}
-              style={{ perspective: 1000 }}
-              className="bg-[#090909] border-2 border-orange-600 rounded-2xl p-6 md:p-10 shadow-[0_8px_30px_rgba(0,0,0,0.5)] hover:border-orange-500 transition-colors mt-6"
-            >
-              <h3 className="text-2xl sm:text-3xl font-bold text-white mb-6">{project.name}</h3>
-              
-              {project.images && project.images.length > 0 && (
-                <div className="mb-8">
-                  <HeroCarousel
-                    images={project.images}
-                    labels={Array(project.images.length).fill(project.name)}
-                    yBounce={[0, 0, 0]}
-                    className="!aspect-[4/3] md:!aspect-[16/10] max-h-[700px]"
-                  />
-                </div>
-              )}
-  
-              <div className="space-y-6">
-                <h4 className="text-xl font-bold text-orange-500 flex items-center gap-2">
-                  🌿 Project Highlights
-                </h4>
+            <AnimatedReveal key={project.id} type="3d-flip-x" delay={idx * 0.15} duration={0.9} className="w-full">
+              <motion.div 
+                whileHover={{ 
+                  scale: 1.02, 
+                  rotateX: 2, 
+                  rotateY: -2, 
+                  boxShadow: "0 25px 50px -12px rgba(249, 115, 22, 0.25)"
+                }}
+                className="bg-[#090909] border-2 border-orange-600 rounded-2xl p-6 md:p-10 shadow-[0_8px_30px_rgba(0,0,0,0.5)] hover:border-orange-500 transition-colors mt-6 w-full"
+              >
+                <h3 className="text-2xl sm:text-3xl font-bold text-white mb-6">{project.name}</h3>
                 
-                <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm md:text-base text-zinc-300">
-                  {project.highlights && project.highlights.map((highlight: string, i: number) => (
-                    <li key={i} className="flex items-start gap-2">
-                      <Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> 
-                      <span>{highlight}</span>
-                    </li>
-                  ))}
-                </ul>
-  
-                {( (project.price && project.price.trim() !== '') || (project.bank_loan && project.bank_loan.trim() !== '') ) && (
-                  <div className="mt-8 p-6 bg-zinc-950/80 border-2 border-orange-600 hover:border-orange-500 transition-colors rounded-xl flex flex-col md:flex-row gap-6 justify-between items-center">
-                    <div>
-                      <h5 className="text-lg font-bold text-white mb-1">Pricing</h5>
-                      <p className="text-orange-400 font-semibold text-xl">{project.price || 'Contact for price'}</p>
-                    </div>
-                    <div className="text-left md:text-right">
-                      <h5 className="text-lg font-bold text-white mb-1">Bank Loan</h5>
-                      <p className="text-zinc-400 font-medium">{project.bank_loan || 'Not Available'}</p>
-                    </div>
+                {project.images && project.images.length > 0 && (
+                  <div className="mb-8">
+                    <HeroCarousel
+                      images={project.images}
+                      labels={Array(project.images.length).fill(project.name)}
+                      yBounce={[0, 0, 0]}
+                      className="!aspect-[4/3] md:!aspect-[16/10] max-h-[700px]"
+                    />
                   </div>
                 )}
-              </div>
-            </motion.div>
+    
+                <div className="space-y-6">
+                  <h4 className="text-xl font-bold text-orange-500 flex items-center gap-2">
+                    🌿 Project Highlights
+                  </h4>
+                  
+                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm md:text-base text-zinc-300">
+                    {project.highlights && project.highlights.map((highlight: string, i: number) => (
+                      <li key={i} className="flex items-start gap-2">
+                        <Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> 
+                        <span>{highlight}</span>
+                      </li>
+                    ))}
+                  </ul>
+    
+                  {( (project.price && project.price.trim() !== '') || (project.bank_loan && project.bank_loan.trim() !== '') ) && (
+                    <div className="mt-8 p-6 bg-zinc-950/80 border-2 border-orange-600 hover:border-orange-500 transition-colors rounded-xl flex flex-col md:flex-row gap-6 justify-between items-center">
+                      <div>
+                        <h5 className="text-lg font-bold text-white mb-1">Pricing</h5>
+                        <p className="text-orange-400 font-semibold text-xl">{project.price || 'Contact for price'}</p>
+                      </div>
+                      <div className="text-left md:text-right">
+                        <h5 className="text-lg font-bold text-white mb-1">Bank Loan</h5>
+                        <p className="text-zinc-400 font-medium">{project.bank_loan || 'Not Available'}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            </AnimatedReveal>
           ))
         ) : (
           <div className="text-center py-20 text-zinc-500">
             <p>No projects available at the moment. Please check back later.</p>
           </div>
         )}
-      </motion.section>
+      </AnimatedReveal>
 
     </motion.div>
   );

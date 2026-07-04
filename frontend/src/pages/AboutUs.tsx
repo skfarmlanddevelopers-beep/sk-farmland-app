@@ -3,6 +3,8 @@ import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
 import { ShieldCheck, FileText, Milestone, Zap, Sprout, Landmark, MapPin, Smile, Compass, Sparkles, PhoneCall, Check, Leaf, TrendingUp, DollarSign, Home as HomeIcon, Calendar, ArrowRight, Award } from 'lucide-react';
 import { trustHighlights, incomeGenerators } from '../data';
 import { PageId } from '../types';
+import AnimatedReveal from '../components/AnimatedReveal';
+import AnimatedText from '../components/AnimatedText';
 import gallery1 from '../assets/gallery-1.jpeg';
 import gallery2 from '../assets/gallery-2.jpeg';
 import gallery3 from '../assets/gallery-3.jpeg';
@@ -130,7 +132,7 @@ export default function AboutUs({ setActivePage, onBookClick }: AboutUsProps) {
     >
       
       {/* Page Header */}
-      <section id="about-hero" className="text-center space-y-4 max-w-3xl xl:max-w-5xl 2xl:max-w-6xl mx-auto px-4">
+      <AnimatedReveal type="slide" direction="up" delay={0.1} duration={0.8} className="text-center space-y-4 max-w-3xl xl:max-w-5xl 2xl:max-w-6xl mx-auto px-4">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-orange-500/10 rounded-full border border-orange-500/20 text-orange-400 font-mono text-[10px] uppercase tracking-widest">
           <Compass size={11} className="animate-spin" style={{ animationDuration: '8s' }} />
           Who We Are
@@ -159,30 +161,24 @@ export default function AboutUs({ setActivePage, onBookClick }: AboutUsProps) {
           ))}
         </motion.h1>
         <p className="text-sm text-zinc-400 leading-relaxed mb-4">
-          At SK Farmland Developers, we believe that owning farmland should be simple, transparent, secure, and rewarding. For over 5+ years of trust, we have helped families and investors own premium farmland through legally verified projects with quality infrastructure and complete transparency.
+          <AnimatedText type="typing" duration={2} text="At SK Farmland Developers, we believe that owning farmland should be simple, transparent, secure, and rewarding. For over 5+ years of trust, we have helped families and investors own premium farmland through legally verified projects with quality infrastructure and complete transparency." />
         </p>
         <p className="text-sm text-zinc-400 leading-relaxed">
-          With 700+ acres developed, 1,000+ happy customers, and 8+ premium farmland projects, we have earned a reputation for trust, integrity, and customer satisfaction.
+          <AnimatedText type="typing" duration={2} text="With 700+ acres developed, 1,000+ happy customers, and 8+ premium farmland projects, we have earned a reputation for trust, integrity, and customer satisfaction." />
         </p>
-      </section>
+      </AnimatedReveal>
 
       {/* Legacy Story Section */}
-      <motion.section 
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        id="about-story" className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl px-4"
-      >
+      <AnimatedReveal type="3d-flip-x" delay={0.2} duration={0.8} className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center bg-[#090909] border-2 border-orange-600 rounded-3xl p-6 md:p-10 hover:border-orange-500 transition-colors">
           
           <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-white tracking-tight">Our Vision</h2>
+            <h2 className="text-2xl font-bold text-white tracking-tight"><AnimatedText type="words" text="Our Vision" /></h2>
             <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
-              Our vision is to reconnect people with nature while creating secure farmland investment opportunities. We bridge the gap between urban families seeking peaceful weekend living and investors looking for long-term capital appreciation.
+              <AnimatedText type="typing" duration={2} text="Our vision is to reconnect people with nature while creating secure farmland investment opportunities. We bridge the gap between urban families seeking peaceful weekend living and investors looking for long-term capital appreciation." />
             </p>
             <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
-              We carefully identify fertile farmland in high-growth locations near Electronic City, Jigani, Chandapura, Bannerghatta Road, Kanakapura Road, Hosur, and Anekal. Every project is thoughtfully planned with modern infrastructure, making it suitable for farming, farmhouse construction, weekend living, or long-term investment.
+              <AnimatedText type="typing" duration={2} text="We carefully identify fertile farmland in high-growth locations near Electronic City, Jigani, Chandapura, Bannerghatta Road, Kanakapura Road, Hosur, and Anekal. Every project is thoughtfully planned with modern infrastructure, making it suitable for farming, farmhouse construction, weekend living, or long-term investment." />
             </p>
 
             <div className="pt-4 border-t border-zinc-900/80 grid grid-cols-2 gap-4">
@@ -205,16 +201,10 @@ export default function AboutUs({ setActivePage, onBookClick }: AboutUsProps) {
           </div>
 
         </div>
-      </motion.section>
+      </AnimatedReveal>
 
       {/* Grid of trust parameters (Why choose us) */}
-      <motion.section 
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-        variants={sectionVariants}
-        id="why-choose-us-section" className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl px-4 space-y-8"
-      >
+      <AnimatedReveal type="slide" direction="up" delay={0.2} duration={0.8} className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl px-4 space-y-8">
         
         <div className="text-center space-y-2">
           <span className="text-xs font-bold uppercase tracking-[0.25em] text-orange-500 font-mono">
@@ -230,27 +220,33 @@ export default function AboutUs({ setActivePage, onBookClick }: AboutUsProps) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {whyCards.map((card, i) => (
-            <motion.div
+            <AnimatedReveal
               key={i}
-              variants={itemVariants}
-              id={`why-card-${i}`}
-              className="bg-[#0A0A0A] border-2 border-orange-600 hover:border-orange-500 rounded-xl p-5 transition-all duration-300 space-y-3 flex flex-col justify-between"
+              type="3d-flip-x"
+              delay={i * 0.1}
+              duration={0.7}
+              className="h-full"
             >
-              <div className="space-y-3">
-                <div className="w-9 h-9 rounded-full bg-orange-500/5 border border-orange-500/10 flex items-center justify-center">
-                  {card.icon}
+              <div
+                id={`why-card-${i}`}
+                className="bg-[#0A0A0A] border-2 border-orange-600 hover:border-orange-500 rounded-xl p-5 transition-all duration-300 space-y-3 flex flex-col justify-between h-full"
+              >
+                <div className="space-y-3">
+                  <div className="w-9 h-9 rounded-full bg-orange-500/5 border border-orange-500/10 flex items-center justify-center">
+                    {card.icon}
+                  </div>
+                  <h4 className="text-xs sm:text-sm font-bold text-white tracking-tight leading-snug">{card.title}</h4>
+                  <p className="text-[11px] text-zinc-400 leading-relaxed">{card.desc}</p>
                 </div>
-                <h4 className="text-xs sm:text-sm font-bold text-white tracking-tight leading-snug">{card.title}</h4>
-                <p className="text-[11px] text-zinc-400 leading-relaxed">{card.desc}</p>
               </div>
-            </motion.div>
+            </AnimatedReveal>
           ))}
         </div>
 
-      </motion.section>
+      </AnimatedReveal>
 
       {/* Property Visit Assistance */}
-      <section id="about-site-visit-assistance" className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl px-4 space-y-8 mt-12">
+      <AnimatedReveal type="slide" direction="up" delay={0.2} duration={0.8} className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl px-4 space-y-8 mt-12">
         <div className="bg-[#090909] border-2 border-orange-600 hover:border-orange-500 transition-colors rounded-3xl p-6 md:p-10">
           <h2 className="text-2xl font-bold text-white tracking-tight mb-4 flex items-center gap-2">
             <MapPin className="text-orange-500" /> Property Visit Assistance
@@ -276,10 +272,10 @@ export default function AboutUs({ setActivePage, onBookClick }: AboutUsProps) {
             Our objective is to ensure that every buyer has complete clarity, confidence, and transparency before making an investment decision.
           </p>
         </div>
-      </section>
+      </AnimatedReveal>
 
       {/* Our Commitment CTA */}
-      <section id="about-commitment" className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl px-4 mt-12">
+      <AnimatedReveal type="slide" direction="up" delay={0.2} duration={0.8} className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl px-4 mt-12">
         <div className="bg-gradient-to-r from-zinc-950 via-[#120F0B] to-zinc-950 border-2 border-orange-600 hover:border-orange-500 transition-colors rounded-2xl p-6 md:p-10 flex flex-col lg:flex-row items-center justify-between gap-8 shadow-xl">
           <div className="space-y-4 max-w-2xl text-center lg:text-left">
             <span className="text-[10px] font-bold uppercase tracking-widest text-orange-400 font-mono flex items-center justify-center lg:justify-start gap-1">
@@ -293,10 +289,8 @@ export default function AboutUs({ setActivePage, onBookClick }: AboutUsProps) {
               Invest with Confidence. Grow with Nature. <span className="text-orange-400">Build Your Future with SK Farmland Developers.</span>
             </p>
           </div>
-
-
         </div>
-      </section>
+      </AnimatedReveal>
 
      </motion.div>
   );

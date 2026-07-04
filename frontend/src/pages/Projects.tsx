@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Check, Calendar } from 'lucide-react';
+import AnimatedReveal from '../components/AnimatedReveal';
+import AnimatedText from '../components/AnimatedText';
 
 
 
@@ -84,30 +86,31 @@ export default function Projects({ onBookClick }: ProjectsProps) {
     >
       <div className="text-left space-y-3 mb-2">
         <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-          Projects
+          <AnimatedText type="words" text="Projects" />
         </h2>
         <p className="text-sm sm:text-base text-zinc-400 max-w-3xl xl:max-w-5xl 2xl:max-w-6xl leading-relaxed">
-          Experience premium farmland living with thoughtfully planned infrastructure, natural surroundings, and modern amenities.
+          <AnimatedText type="typing" duration={2} text="Experience premium farmland living with thoughtfully planned infrastructure, natural surroundings, and modern amenities." />
         </p>
       </div>
 
       {projects.length > 0 ? (
         projects.map((project, idx) => (
-          <motion.div 
-            key={project.id} 
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.1 }}
-            transition={{ duration: 0.7, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
-            whileHover={{ 
-              scale: 1.02, 
-              rotateX: 2, 
-              rotateY: -2, 
-              boxShadow: "0 25px 50px -12px rgba(249, 115, 22, 0.25)"
-            }}
-            style={{ perspective: 1000 }}
-            className="bg-[#090909] border-2 border-orange-600 rounded-2xl p-6 md:p-10 shadow-[0_8px_30px_rgba(0,0,0,0.5)] hover:border-orange-500 transition-colors"
+          <AnimatedReveal
+            key={project.id}
+            type="3d-flip-x"
+            delay={idx * 0.15}
+            duration={0.9}
+            className="w-full"
           >
+            <motion.div 
+              whileHover={{ 
+                scale: 1.02, 
+                rotateX: 2, 
+                rotateY: -2, 
+                boxShadow: "0 25px 50px -12px rgba(249, 115, 22, 0.25)"
+              }}
+              className="bg-[#090909] border-2 border-orange-600 rounded-2xl p-6 md:p-10 shadow-[0_8px_30px_rgba(0,0,0,0.5)] hover:border-orange-500 transition-colors w-full"
+            >
             <h3 className="text-2xl sm:text-3xl font-bold text-white mb-6">{project.name}</h3>
             
             {project.images && project.images.length > 0 && (
@@ -149,6 +152,7 @@ export default function Projects({ onBookClick }: ProjectsProps) {
               )}
             </div>
           </motion.div>
+        </AnimatedReveal>
         ))
       ) : (
         <div className="text-center py-20 text-zinc-500">
