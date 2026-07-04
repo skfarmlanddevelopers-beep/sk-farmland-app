@@ -36,10 +36,15 @@ export default function ProjectsManager() {
       const response = await fetch(`/api/projects?all=true&t=${new Date().getTime()}`, { cache: 'no-store' });
       if (response.ok) {
         const data = await response.json();
+        const safeParse = (str: any) => {
+          if (typeof str !== 'string') return str;
+          try { return JSON.parse(str); } catch (e) { return []; }
+        };
+
         const formattedData = data.map((proj: any) => ({
           ...proj,
-          images: typeof proj.images === 'string' ? JSON.parse(proj.images) : proj.images,
-          highlights: typeof proj.highlights === 'string' ? JSON.parse(proj.highlights) : proj.highlights,
+          images: safeParse(proj.images),
+          highlights: safeParse(proj.highlights),
         }));
         setProjects(formattedData);
         
