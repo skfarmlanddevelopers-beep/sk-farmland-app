@@ -40,10 +40,7 @@ try {
   console.log('Manual env parsing skipped');
 }
 
-// Force 127.0.0.1 instead of localhost for Hostinger Node 18+ IPv6 issues
-if (dbConfig.host === 'localhost') {
-  dbConfig.host = '127.0.0.1';
-}
+
 
 const pool = mysql.createPool({
   ...dbConfig,
