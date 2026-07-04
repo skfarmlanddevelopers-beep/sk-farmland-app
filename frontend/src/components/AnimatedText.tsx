@@ -28,7 +28,7 @@ export default function AnimatedText({
 
   if (type === 'words') {
     return (
-      <span ref={ref} className={`inline-block ${className}`}>
+      <span ref={ref} className={`inline ${className}`}>
         <span className="sr-only">{text}</span>
         <motion.span
           initial="hidden"
@@ -43,7 +43,7 @@ export default function AnimatedText({
             hidden: {},
           }}
           aria-hidden="true"
-          className="inline-block"
+          className="inline"
         >
           {words.map((word, i) => (
             <motion.span
@@ -68,7 +68,7 @@ export default function AnimatedText({
 
   // default to typing/characters
   return (
-    <span ref={ref} className={`inline-block ${className}`}>
+    <span ref={ref} className={`inline ${className}`}>
       <span className="sr-only">{text}</span>
       <motion.span
         initial="hidden"
@@ -83,18 +83,18 @@ export default function AnimatedText({
           hidden: {},
         }}
         aria-hidden="true"
-        className="inline-block"
+        className="inline"
       >
         {characters.map((char, i) => (
           <motion.span
             key={i}
             variants={{
               hidden: { opacity: 0, display: 'none' },
-              visible: { opacity: 1, display: 'inline-block' },
+              visible: { opacity: 1, display: 'inline' },
             }}
-            className="inline-block"
+            className={char === ' ' ? "whitespace-pre-wrap" : ""}
           >
-            {char === ' ' ? '\u00A0' : char}
+            {char === ' ' ? ' ' : char}
           </motion.span>
         ))}
       </motion.span>
