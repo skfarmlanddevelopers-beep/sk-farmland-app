@@ -9,7 +9,7 @@
 
 html, body {
   width: 100%;
-  position: relative;
+  overflow-x: clip;
 }
 
 /* Custom styles for input date fields to look consistent on dark mode */

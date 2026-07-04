@@ -374,7 +374,7 @@ async function initDb() {
         CREATE TABLE IF NOT EXISTS hero_images (
           id INT AUTO_INCREMENT PRIMARY KEY,
           side ENUM('left', 'right') NOT NULL,
-          image_path VARCHAR(255) NOT NULL,
+          image_path LONGTEXT NOT NULL,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
       `);
