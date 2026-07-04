@@ -47,7 +47,7 @@ export default function Gallery({ onBookClick }: GalleryProps) {
         const response = await fetch('/api/gallery');
         if (response.ok) {
           const data = await response.json();
-          const customImages = data.filter((img: any) => img.image && img.image.startsWith('/uploads/'));
+          const customImages = data.filter((img: any) => img.image && (img.image.startsWith('/uploads/') || img.image.startsWith('data:image/')));
           setDynamicGallery(customImages);
         }
       } catch (err) {

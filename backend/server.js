@@ -36,6 +36,7 @@ const getBase64DataUrl = (file) => {
 app.get('/api/gallery', async (req, res) => {
   try {
     const [rows] = await db.query('SELECT * FROM gallery');
+    rows.sort((a, b) => { if (a.display_order !== b.display_order) return (a.display_order || 0) - (b.display_order || 0); return new Date(b.created_at) - new Date(a.created_at); });
     res.json(rows);
   } catch (err) {
     console.error('Error fetching gallery:', err);
@@ -47,6 +48,7 @@ app.get('/api/gallery', async (req, res) => {
 app.get('/api/leads', async (req, res) => {
   try {
     const [rows] = await db.query('SELECT * FROM leads ORDER BY created_at DESC');
+    rows.sort((a, b) => { if (a.display_order !== b.display_order) return (a.display_order || 0) - (b.display_order || 0); return new Date(b.created_at) - new Date(a.created_at); });
     res.json(rows);
   } catch (err) {
     console.error('Error fetching leads:', err);
@@ -64,7 +66,7 @@ app.post('/api/site-visits', async (req, res) => {
     }
 
     await db.query(
-      'INSERT INTO site_visits (name, phone, email, project_interest, budget, preferred_date, notes) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      'INSERT INTO site_visits (name, phone, email, project_interest, budget, preferred_date, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [name, phone, email || '', project_interest || '', budget || '', preferredDate || '', notes || '']
     );
     
@@ -78,6 +80,7 @@ app.post('/api/site-visits', async (req, res) => {
 app.get('/api/site-visits', async (req, res) => {
   try {
     const [rows] = await db.query('SELECT * FROM site_visits ORDER BY created_at DESC');
+    rows.sort((a, b) => { if (a.display_order !== b.display_order) return (a.display_order || 0) - (b.display_order || 0); return new Date(b.created_at) - new Date(a.created_at); });
     res.json(rows);
   } catch (err) {
     console.error('Error fetching site visits:', err);
@@ -161,6 +164,7 @@ app.delete('/api/gallery/:id', async (req, res) => {
 app.get('/api/hero-images', async (req, res) => {
   try {
     const [rows] = await db.query('SELECT * FROM hero_images ORDER BY display_order ASC, created_at ASC');
+    rows.sort((a, b) => { if (a.display_order !== b.display_order) return (a.display_order || 0) - (b.display_order || 0); return new Date(b.created_at) - new Date(a.created_at); });
     res.json(rows);
   } catch (err) {
     console.error('Error fetching hero images:', err);
@@ -238,6 +242,7 @@ app.post('/api/admin/login', async (req, res) => {
 app.get('/api/admin/users', async (req, res) => {
   try {
     const [rows] = await db.query('SELECT id, username FROM admin_settings ORDER BY id ASC');
+    rows.sort((a, b) => { if (a.display_order !== b.display_order) return (a.display_order || 0) - (b.display_order || 0); return new Date(b.created_at) - new Date(a.created_at); });
     res.json(rows);
   } catch (err) {
     console.error('Error fetching admins:', err);
@@ -396,15 +401,16 @@ initDb();
 app.get('/api/projects', async (req, res) => {
   try {
     const { all } = req.query;
-    let query = 'SELECT * FROM projects WHERE show_on_home = 1 ORDER BY display_order ASC, created_at DESC';
+    let query = 'SELECT * FROM projects WHERE show_on_home = 1 ';
     let params = [];
     
     // If admin panel requests all projects
     if (all === 'true') {
-      query = 'SELECT * FROM projects ORDER BY display_order ASC, created_at DESC';
+      query = 'SELECT * FROM projects ';
     }
     
     const [rows] = await db.query(query, params);
+    rows.sort((a, b) => { if (a.display_order !== b.display_order) return (a.display_order || 0) - (b.display_order || 0); return new Date(b.created_at) - new Date(a.created_at); });
     res.json(rows);
   } catch (err) {
     console.error('Error fetching projects:', err);
@@ -414,7 +420,7 @@ app.get('/api/projects', async (req, res) => {
 
 app.post('/api/projects', upload.array('images', 15), async (req, res) => {
   try {
-    const { name, price, bank_loan, highlights, show_on_home } = req.body;
+    const { heading, name, sub_heading, price, bank_loan, highlights, show_on_home } = req.body;
     if (!name) {
       return res.status(400).json({ error: 'Project name is required' });
     }
@@ -434,8 +440,8 @@ app.post('/api/projects', upload.array('images', 15), async (req, res) => {
     const isShowOnHome = show_on_home === 'true' || show_on_home === true;
     
     await db.query(
-      'INSERT INTO projects (id, name, price, bank_loan, images, highlights, show_on_home) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [id, name, price || '', bank_loan || '', JSON.stringify(imagePaths), JSON.stringify(parsedHighlights), isShowOnHome]
+      'INSERT INTO projects (id, heading, name, sub_heading, price, bank_loan, images, highlights, show_on_home) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [id, heading || '', name, sub_heading || '', price || '', bank_loan || '', JSON.stringify(imagePaths), JSON.stringify(parsedHighlights), isShowOnHome]
     );
     res.json({ id, name, price, bank_loan, images: imagePaths, highlights: parsedHighlights, show_on_home: isShowOnHome });
   } catch (err) {
@@ -461,7 +467,7 @@ app.put('/api/projects/order', async (req, res) => {
 app.put('/api/projects/:id', upload.array('images', 15), async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, price, bank_loan, highlights, show_on_home } = req.body;
+    const { heading, name, sub_heading, price, bank_loan, highlights, show_on_home } = req.body;
     if (!name) {
       return res.status(400).json({ error: 'Project name is required' });
     }
@@ -480,13 +486,13 @@ app.put('/api/projects/:id', upload.array('images', 15), async (req, res) => {
       // New images uploaded
       const imagePaths = req.files.map(f => getBase64DataUrl(f));
       await db.query(
-        'UPDATE projects SET name = ?, price = ?, bank_loan = ?, images = ?, highlights = ?, show_on_home = ? WHERE id = ?',
-        [name, price || '', bank_loan || '', JSON.stringify(imagePaths), JSON.stringify(parsedHighlights), isShowOnHome, id]
+        'UPDATE projects SET heading = ?, name = ?, sub_heading = ?, price = ?, bank_loan = ?, images = ?, highlights = ?, show_on_home = ? WHERE id = ?',
+        [heading || '', name, sub_heading || '', price || '', bank_loan || '', JSON.stringify(imagePaths), JSON.stringify(parsedHighlights), isShowOnHome, id]
       );
     } else {
       await db.query(
-        'UPDATE projects SET name = ?, price = ?, bank_loan = ?, highlights = ?, show_on_home = ? WHERE id = ?',
-        [name, price || '', bank_loan || '', JSON.stringify(parsedHighlights), isShowOnHome, id]
+        'UPDATE projects SET heading = ?, name = ?, sub_heading = ?, price = ?, bank_loan = ?, highlights = ?, show_on_home = ? WHERE id = ?',
+        [heading || '', name, sub_heading || '', price || '', bank_loan || '', JSON.stringify(parsedHighlights), isShowOnHome, id]
       );
     }
     res.json({ success: true });

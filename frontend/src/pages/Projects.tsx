@@ -111,7 +111,11 @@ export default function Projects({ onBookClick }: ProjectsProps) {
               }}
               className="bg-[#090909] border-2 border-orange-600 rounded-2xl p-6 md:p-10 shadow-[0_8px_30px_rgba(0,0,0,0.5)] hover:border-orange-500 transition-colors w-full"
             >
-            <h3 className="text-2xl sm:text-3xl font-bold text-white mb-6">{project.name}</h3>
+            <div className="mb-6 flex flex-col gap-1">
+              {project.heading && <span className="text-orange-500 font-bold uppercase tracking-wider text-2xl sm:text-3xl">{project.heading}</span>}
+              <h3 className="text-2xl sm:text-3xl font-bold text-white leading-tight">{project.name}</h3>
+              {project.sub_heading && <p className="text-zinc-400 font-bold text-2xl sm:text-3xl">{project.sub_heading}</p>}
+            </div>
             
             {project.images && project.images.length > 0 && (
               <div className="mb-8">
@@ -130,23 +134,24 @@ export default function Projects({ onBookClick }: ProjectsProps) {
               </h4>
               
               <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm md:text-base text-zinc-300">
-                {project.highlights && project.highlights.map((highlight: string, i: number) => (
+                {project.highlights && project.highlights.map((highlight: any, i: number) => (
                   <li key={i} className="flex items-start gap-2">
                     <Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> 
-                    <span>{highlight}</span>
+                    <span>{typeof highlight === "object" && highlight !== null ? ((highlight as any).heading ? (highlight as any).heading + ": " + (highlight as any).text : (highlight as any).text) : highlight}</span>
                   </li>
                 ))}
               </ul>
 
               {( (project.price && project.price.trim() !== '') || (project.bank_loan && project.bank_loan.trim() !== '') ) && (
-                <div className="mt-8 p-6 bg-zinc-950/80 border-2 border-orange-600 hover:border-orange-500 transition-colors rounded-xl flex flex-col md:flex-row gap-6 justify-between items-center">
-                  <div>
-                    <h5 className="text-lg font-bold text-white mb-1">Pricing</h5>
-                    <p className="text-orange-400 font-semibold text-xl">{project.price || 'Contact for price'}</p>
+                <div className="mt-8 p-6 md:p-8 bg-zinc-950/80 border-2 border-orange-600/50 hover:border-orange-500 transition-all rounded-2xl flex flex-col md:flex-row gap-8 md:gap-6 justify-between items-center shadow-xl">
+                  <div className="text-center md:text-left flex-1">
+                    <h5 className="text-sm md:text-base font-bold text-zinc-400 uppercase tracking-widest mb-2">Pricing</h5>
+                    <p className="text-orange-400 font-black text-2xl md:text-4xl drop-shadow-lg">{project.price || 'Contact for price'}</p>
                   </div>
-                  <div className="text-left md:text-right">
-                    <h5 className="text-lg font-bold text-white mb-1">Bank Loan</h5>
-                    <p className="text-zinc-400 font-medium">{project.bank_loan || 'Not Available'}</p>
+                  <div className="hidden md:block w-px h-16 bg-orange-600/30"></div>
+                  <div className="text-center md:text-right flex-1">
+                    <h5 className="text-sm md:text-base font-bold text-zinc-400 uppercase tracking-widest mb-2">Bank Loan</h5>
+                    <p className="text-white font-bold text-xl md:text-2xl">{project.bank_loan || 'Not Available'}</p>
                   </div>
                 </div>
               )}

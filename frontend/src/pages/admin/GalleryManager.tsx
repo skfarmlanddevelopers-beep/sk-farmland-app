@@ -97,7 +97,7 @@ export default function GalleryManager() {
   }
 
   // We only allow deleting custom uploaded images from here
-  const customImages = images.filter(img => img.image.startsWith('/uploads/'));
+  const customImages = images.filter(img => img.image.startsWith('/uploads/') || img.image.startsWith('data:image/'));
 
   return (
     <div>

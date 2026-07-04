@@ -50,7 +50,19 @@ export default function PlainLand({ onBookClick }: PlainLandProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
           {/* Highlights */}
-          <div className="bg-[#0A0A0A] border-2 border-orange-600 hover:border-orange-500 transition-colors rounded-2xl p-6 space-y-4">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            whileHover={{ 
+              scale: 1.02,
+              rotateX: 2,
+              rotateY: -2,
+              boxShadow: "0 25px 50px -12px rgba(234, 88, 12, 0.4)"
+            }}
+            className="bg-[#0A0A0A] border-2 border-orange-600 hover:border-orange-500 transition-all duration-300 rounded-2xl p-6 space-y-4 cursor-default"
+          >
             <h3 className="text-base font-bold text-white tracking-tight flex items-center gap-2 border-b border-zinc-900 pb-3 mb-1">
               <span className="text-emerald-500">✨</span> Highlights
             </h3>
@@ -70,10 +82,22 @@ export default function PlainLand({ onBookClick }: PlainLandProps) {
                 </li>
               ))}
             </ul>
-          </div>
+          </motion.div>
 
           {/* Important Note */}
-          <div className="bg-[#0A0A0A] border-2 border-orange-600 hover:border-orange-500 transition-colors rounded-2xl p-6 space-y-4">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            whileHover={{ 
+              scale: 1.02,
+              rotateX: 2,
+              rotateY: -2,
+              boxShadow: "0 25px 50px -12px rgba(234, 88, 12, 0.4)"
+            }}
+            className="bg-[#0A0A0A] border-2 border-orange-600 hover:border-orange-500 transition-all duration-300 rounded-2xl p-6 space-y-4 cursor-default"
+          >
             <h3 className="text-base font-bold text-white tracking-tight flex items-center gap-2 border-b border-zinc-900 pb-3 mb-1">
               <span className="text-red-500">⚠️</span> IMPORTANT NOTE (VERY CLEAR)
             </h3>
@@ -98,10 +122,22 @@ export default function PlainLand({ onBookClick }: PlainLandProps) {
                 <span className="text-orange-500 font-mono">👉</span> Buyer has full freedom to develop the land as per their needs.
               </p>
             </div>
-          </div>
+          </motion.div>
 
           {/* Why Smart Investment */}
-          <div className="bg-[#0A0A0A] border-2 border-orange-600 hover:border-orange-500 transition-colors rounded-2xl p-6 space-y-4">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            whileHover={{ 
+              scale: 1.02,
+              rotateX: 2,
+              rotateY: -2,
+              boxShadow: "0 25px 50px -12px rgba(234, 88, 12, 0.4)"
+            }}
+            className="bg-[#0A0A0A] border-2 border-orange-600 hover:border-orange-500 transition-all duration-300 rounded-2xl p-6 space-y-4 cursor-default"
+          >
             <h3 className="text-base font-bold text-white tracking-tight flex items-center gap-2 border-b border-zinc-900 pb-3 mb-1">
               <span className="text-orange-500">💰</span> WHY THIS IS A SMART INVESTMENT
             </h3>
@@ -120,10 +156,22 @@ export default function PlainLand({ onBookClick }: PlainLandProps) {
                 </li>
               ))}
             </ul>
-          </div>
+          </motion.div>
 
           {/* Business Policy */}
-          <div className="bg-[#0A0A0A] border-2 border-orange-600 hover:border-orange-500 transition-colors rounded-2xl p-6 space-y-4">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            whileHover={{ 
+              scale: 1.02,
+              rotateX: 2,
+              rotateY: -2,
+              boxShadow: "0 25px 50px -12px rgba(234, 88, 12, 0.4)"
+            }}
+            className="bg-[#0A0A0A] border-2 border-orange-600 hover:border-orange-500 transition-all duration-300 rounded-2xl p-6 space-y-4 cursor-default"
+          >
             <h3 className="text-base font-bold text-white tracking-tight flex items-center gap-2 border-b border-zinc-900 pb-3 mb-1">
               <span className="text-orange-500">⚠️</span> BUSINESS POLICY
             </h3>
@@ -141,7 +189,7 @@ export default function PlainLand({ onBookClick }: PlainLandProps) {
                 <span className="leading-relaxed">Communication only with genuine buyers</span>
               </li>
             </ul>
-          </div>
+          </motion.div>
 
         </div>
       </section>

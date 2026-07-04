@@ -3,6 +3,8 @@ import { Trash2, Upload, Plus, X, Edit } from 'lucide-react';
 
 interface Project {
   id: string;
+  heading?: string;
+  sub_heading?: string;
   name: string;
   price: string;
   bank_loan: string;
@@ -20,6 +22,8 @@ export default function ProjectsManager() {
   const [savingOrder, setSavingOrder] = useState(false);
 
   // Form states
+  const [heading, setHeading] = useState('');
+  const [subHeading, setSubHeading] = useState('');
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [bankLoan, setBankLoan] = useState('');
@@ -63,6 +67,8 @@ export default function ProjectsManager() {
 
     setUploading(true);
     const formData = new FormData();
+    formData.append('heading', heading);
+    formData.append('sub_heading', subHeading);
     formData.append('name', name);
     formData.append('price', price);
     formData.append('bank_loan', bankLoan);
@@ -88,6 +94,8 @@ export default function ProjectsManager() {
       });
 
       if (response.ok) {
+        setHeading('');
+        setSubHeading('');
         setName('');
         setPrice('');
         setBankLoan('');
@@ -111,6 +119,8 @@ export default function ProjectsManager() {
 
   const handleEditClick = (project: Project) => {
     setEditingId(project.id);
+    setHeading(project.heading || '');
+    setSubHeading(project.sub_heading || '');
     setName(project.name || '');
     setPrice(project.price || '');
     setBankLoan(project.bank_loan || '');
@@ -210,6 +220,8 @@ export default function ProjectsManager() {
                 type="button"
                 onClick={() => {
                   setEditingId(null);
+                  setHeading('');
+                  setSubHeading('');
                   setName('');
                   setPrice('');
                   setBankLoan('');
@@ -226,6 +238,16 @@ export default function ProjectsManager() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
+              <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Heading (Orange Text)</label>
+              <input
+                type="text"
+                value={heading}
+                onChange={(e) => setHeading(e.target.value)}
+                className="w-full bg-black border border-zinc-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-orange-500"
+                placeholder="e.g. VAIKUNTAM"
+              />
+            </div>
+            <div>
               <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Project Name *</label>
               <input
                 type="text"
@@ -234,6 +256,17 @@ export default function ProjectsManager() {
                 className="w-full bg-black border border-zinc-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-orange-500"
                 placeholder="e.g. Project 1"
                 required
+              />
+            </div>
+            
+            <div className="md:col-span-2">
+              <label className="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Sub Heading / Location Text</label>
+              <input
+                type="text"
+                value={subHeading}
+                onChange={(e) => setSubHeading(e.target.value)}
+                className="w-full bg-black border border-zinc-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-orange-500"
+                placeholder="e.g. Vaikuntam is towards Anekal Thalli Road"
               />
             </div>
             
@@ -420,7 +453,7 @@ export default function ProjectsManager() {
                     <span className="block text-xs text-zinc-500 mb-2">Highlights ({project.highlights.length})</span>
                     <ul className="text-xs text-zinc-400 space-y-1 list-disc pl-4 line-clamp-3">
                       {project.highlights.slice(0, 3).map((h, i) => (
-                        <li key={i}>{h}</li>
+                        <li key={i}>{typeof h === "object" && h !== null ? ((h as any).heading ? (h as any).heading + ": " + (h as any).text : (h as any).text) : h}</li>
                       ))}
                       {project.highlights.length > 3 && <li>...and {project.highlights.length - 3} more</li>}
                     </ul>
