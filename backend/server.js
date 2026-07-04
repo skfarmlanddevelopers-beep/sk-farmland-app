@@ -316,6 +316,8 @@ async function initDb() {
 
     try { await db.query(`ALTER TABLE projects ADD COLUMN show_on_home BOOLEAN DEFAULT FALSE`); } catch (err) {}
     try { await db.query(`ALTER TABLE projects ADD COLUMN display_order INT DEFAULT 0`); } catch (err) {}
+    try { await db.query(`ALTER TABLE projects ADD COLUMN heading VARCHAR(100) AFTER id`); } catch (err) {}
+    try { await db.query(`ALTER TABLE projects ADD COLUMN sub_heading VARCHAR(255) AFTER name`); } catch (err) {}
     try { await db.query(`ALTER TABLE hero_images ADD COLUMN display_order INT DEFAULT 0`); } catch (err) {}
 
     try {
