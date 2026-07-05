@@ -5,7 +5,7 @@ import { StatItem, ProjectItem, GalleryItem } from './types';
 export const statsData: StatItem[] = [
   { icon: 'Map', label: 'Acres Developed', value: '700+' },
   { icon: 'Users', label: 'Happy Customers', value: '1,000+' },
-  { icon: 'Leaf', label: 'Premium Projects', value: '8+' },
+  { icon: 'Leaf', label: 'Premium Projects', value: '10+' },
   { icon: 'Home', label: 'Plots Under Management', value: '1,000+' },
   { icon: 'Award', label: 'Years of Trust', value: '5+' },
 ];

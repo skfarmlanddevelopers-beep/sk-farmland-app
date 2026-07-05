@@ -69,20 +69,10 @@ export default function AnimatedReveal({
   const variants = getVariants();
 
   return (
-    <div ref={ref} className={className} style={{ perspective: type.includes('3d') ? '1000px' : 'none' }}>
-      <motion.div
-        variants={variants}
-        initial="hidden"
-        animate={isInView ? 'visible' : 'hidden'}
-        transition={{
-          duration: duration,
-          delay: delay,
-          ease: [0.25, 0.1, 0.25, 1], // Custom premium ease-out cubic bezier
-        }}
-        className="w-full h-full"
-      >
+    <div className={className}>
+      <div className="w-full h-full">
         {children}
-      </motion.div>
+      </div>
     </div>
   );
 }

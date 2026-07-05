@@ -11,7 +11,7 @@ export default function TopHeader({ onClose }: TopHeaderProps) {
   const [index, setIndex] = useState(0);
 
   const lines = [
-    { text: "350 Acres Premium Farmland Project   Towards — Anekal Thalli Road", isLink: false }
+    { text: "350 Acres Premium Farmland Project LOCATED Towards — Anekal Thalli Road", isLink: false }
   ];
 
   useEffect(() => {

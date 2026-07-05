@@ -107,7 +107,7 @@ export default function AboutUs({ setActivePage, onBookClick }: AboutUsProps) {
     },
     {
       title: 'Farmhouse Development & Extra Income Opportunity',
-      desc: 'Build your dream farmhouse on your own farmland and enjoy peaceful weekend living. Many of our customers have already built beautiful farmhouses and earn additional income by listing them on platforms like Airbnb and other farm stay booking services.',
+      desc: 'Build your dream farmhouse on your own farmland and enjoy peaceful weekend living. Many of our customers have already built beautiful farmhouses and are earning additional income by listing them on platforms like Airbnb and other farm stay booking services.',
       icon: <HomeIcon className="w-5 h-5 text-orange-500" />,
     },
     {
@@ -164,7 +164,7 @@ export default function AboutUs({ setActivePage, onBookClick }: AboutUsProps) {
           <AnimatedText type="typing" duration={2} text="At SK Farmland Developers, we believe that owning farmland should be simple, transparent, secure, and rewarding. For over 5+ years of trust, we have helped families and investors own premium farmland through legally verified projects with quality infrastructure and complete transparency." />
         </p>
         <p className="text-sm text-zinc-400 leading-relaxed">
-          <AnimatedText type="typing" duration={2} text="With 700+ acres developed, 1,000+ happy customers, and 8+ premium farmland projects, we have earned a reputation for trust, integrity, and customer satisfaction." />
+          <AnimatedText type="typing" duration={2} text="With 700+ acres developed, 1,000+ happy customers, and 10+ premium farmland projects, we have earned a reputation for trust, integrity, and customer satisfaction." />
         </p>
       </AnimatedReveal>
 

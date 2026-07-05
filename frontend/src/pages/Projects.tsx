@@ -24,9 +24,7 @@ function HeroCarousel({ images, labels, yBounce, className = "" }: HeroCarouselP
   }, [images.length]);
 
   return (
-    <motion.div
-      animate={{ y: yBounce }}
-      transition={{ repeat: Infinity, duration: 7, ease: "easeInOut" }}
+    <div
       className={`w-full rounded-2xl overflow-hidden border-2 border-amber-500/80 shadow-[0_0_20px_rgba(245,158,11,0.25)] aspect-[16/10] relative group z-10 bg-black ${className}`}
     >
       <AnimatePresence initial={false}>
@@ -38,13 +36,13 @@ function HeroCarousel({ images, labels, yBounce, className = "" }: HeroCarouselP
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+          className="absolute inset-0 w-full h-full object-cover"
         />
       </AnimatePresence>
 
       {/* Soft premium shadow overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none z-20" />
-    </motion.div>
+    </div>
   );
 }
 
@@ -100,21 +98,12 @@ export default function Projects({ onBookClick }: ProjectsProps) {
 
       {projects.length > 0 ? (
         projects.map((project, idx) => (
-          <AnimatedReveal
+          <div
             key={project.id}
-            type="3d-flip-x"
-            delay={idx * 0.15}
-            duration={0.9}
             className="w-full"
           >
-            <motion.div 
-              whileHover={{ 
-                scale: 1.02, 
-                rotateX: 2, 
-                rotateY: -2, 
-                boxShadow: "0 25px 50px -12px rgba(249, 115, 22, 0.25)"
-              }}
-              className="bg-[#090909] border-2 border-orange-600 rounded-2xl p-6 md:p-10 shadow-[0_8px_30px_rgba(0,0,0,0.5)] hover:border-orange-500 transition-colors w-full"
+            <div 
+              className="bg-[#090909] border-2 border-orange-600 rounded-2xl p-6 md:p-10 shadow-[0_8px_30px_rgba(0,0,0,0.5)] w-full"
             >
             <div className="mb-6 flex flex-col gap-1">
               {project.heading && <span className="text-orange-500 font-bold uppercase tracking-wider text-2xl sm:text-3xl">{project.heading}</span>}
@@ -161,8 +150,8 @@ export default function Projects({ onBookClick }: ProjectsProps) {
                 </div>
               )}
             </div>
-          </motion.div>
-        </AnimatedReveal>
+          </div>
+        </div>
         ))
       ) : (
         <div className="text-center py-20 text-zinc-500">

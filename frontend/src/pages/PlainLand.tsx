@@ -55,12 +55,7 @@ export default function PlainLand({ onBookClick }: PlainLandProps) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            whileHover={{ 
-              scale: 1.02,
-              rotateX: 2,
-              rotateY: -2,
-              boxShadow: "0 25px 50px -12px rgba(234, 88, 12, 0.4)"
-            }}
+
             className="bg-[#0A0A0A] border-2 border-orange-600 hover:border-orange-500 transition-all duration-300 rounded-2xl p-6 space-y-4 cursor-default"
           >
             <h3 className="text-base font-bold text-white tracking-tight flex items-center gap-2 border-b border-zinc-900 pb-3 mb-1">
@@ -90,12 +85,7 @@ export default function PlainLand({ onBookClick }: PlainLandProps) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            whileHover={{ 
-              scale: 1.02,
-              rotateX: 2,
-              rotateY: -2,
-              boxShadow: "0 25px 50px -12px rgba(234, 88, 12, 0.4)"
-            }}
+
             className="bg-[#0A0A0A] border-2 border-orange-600 hover:border-orange-500 transition-all duration-300 rounded-2xl p-6 space-y-4 cursor-default"
           >
             <h3 className="text-base font-bold text-white tracking-tight flex items-center gap-2 border-b border-zinc-900 pb-3 mb-1">
@@ -130,12 +120,7 @@ export default function PlainLand({ onBookClick }: PlainLandProps) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            whileHover={{ 
-              scale: 1.02,
-              rotateX: 2,
-              rotateY: -2,
-              boxShadow: "0 25px 50px -12px rgba(234, 88, 12, 0.4)"
-            }}
+
             className="bg-[#0A0A0A] border-2 border-orange-600 hover:border-orange-500 transition-all duration-300 rounded-2xl p-6 space-y-4 cursor-default"
           >
             <h3 className="text-base font-bold text-white tracking-tight flex items-center gap-2 border-b border-zinc-900 pb-3 mb-1">
@@ -164,12 +149,7 @@ export default function PlainLand({ onBookClick }: PlainLandProps) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.4 }}
-            whileHover={{ 
-              scale: 1.02,
-              rotateX: 2,
-              rotateY: -2,
-              boxShadow: "0 25px 50px -12px rgba(234, 88, 12, 0.4)"
-            }}
+
             className="bg-[#0A0A0A] border-2 border-orange-600 hover:border-orange-500 transition-all duration-300 rounded-2xl p-6 space-y-4 cursor-default"
           >
             <h3 className="text-base font-bold text-white tracking-tight flex items-center gap-2 border-b border-zinc-900 pb-3 mb-1">

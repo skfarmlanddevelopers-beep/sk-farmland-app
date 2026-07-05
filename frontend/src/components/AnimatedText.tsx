@@ -26,7 +26,7 @@ export default function AnimatedText({
   // For characters/typing animation
   const characters = Array.from(text);
 
-  if (type === 'words') {
+  if (type === 'words' || type === 'typing' || type === 'characters') {
     return (
       <span ref={ref} className={`inline ${className}`}>
         <span className="sr-only">{text}</span>
