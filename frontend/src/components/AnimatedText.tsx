@@ -26,6 +26,21 @@ export default function AnimatedText({
   // For characters/typing animation
   const characters = Array.from(text);
 
+  // Performance Optimization: Animate the entire block at once for long text to prevent DOM bloating and rendering lag
+  if (text.length > 60) {
+    return (
+      <motion.span
+        ref={ref}
+        initial={{ opacity: 0, y: 10 }}
+        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+        transition={{ duration: 0.6, delay, ease: 'easeOut' }}
+        className={`inline-block ${className}`}
+      >
+        {text}
+      </motion.span>
+    );
+  }
+
   if (type === 'words' || type === 'typing' || type === 'characters') {
     return (
       <span ref={ref} className={`inline ${className}`}>

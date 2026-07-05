@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Trash2, Upload } from 'lucide-react';
+import { compressImage } from '../../components/imageCompressor';
 
 interface GalleryImage {
   id: string;
@@ -51,7 +52,8 @@ export default function GalleryManager() {
 
     const formData = new FormData();
     for (let i = 0; i < selectedFiles.length; i++) {
-      formData.append('images', selectedFiles[i]);
+      const compressedFile = await compressImage(selectedFiles[i]);
+      formData.append('images', compressedFile);
     }
 
     try {

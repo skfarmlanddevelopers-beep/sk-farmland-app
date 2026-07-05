@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Trash2, Upload } from 'lucide-react';
+import { compressImage } from '../../components/imageCompressor';
 
 interface HeroImage {
   id: number;
@@ -62,7 +63,8 @@ export default function HeroImagesManager() {
     const formData = new FormData();
     formData.append('side', side);
     for (let i = 0; i < selectedFiles.length; i++) {
-      formData.append('images', selectedFiles[i]);
+      const compressedFile = await compressImage(selectedFiles[i]);
+      formData.append('images', compressedFile);
     }
 
     try {

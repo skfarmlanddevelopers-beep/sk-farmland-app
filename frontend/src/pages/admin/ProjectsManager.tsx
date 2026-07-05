@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Trash2, Upload, Plus, X, Edit } from 'lucide-react';
+import { compressImage } from '../../components/imageCompressor';
 
 interface Project {
   id: string;
@@ -84,9 +85,10 @@ export default function ProjectsManager() {
     formData.append('show_on_home', showOnHome.toString());
 
     if (files) {
-      Array.from(files).forEach((file) => {
-        formData.append('images', file);
-      });
+      for (const file of Array.from(files)) {
+        const compressedFile = await compressImage(file);
+        formData.append('images', compressedFile);
+      }
     }
 
     try {
