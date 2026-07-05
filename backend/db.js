@@ -40,7 +40,10 @@ try {
   console.log('Manual env parsing skipped');
 }
 
-// Removed forced 127.0.0.1 override to support Hostinger MySQL sockets
+// Hostinger IPv6 fix: Always force 127.0.0.1 if host is localhost
+if (dbConfig.host === 'localhost') {
+  dbConfig.host = '127.0.0.1';
+}
 
 const pool = mysql.createPool({
   ...dbConfig,
