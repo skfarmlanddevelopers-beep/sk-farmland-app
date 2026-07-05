@@ -29,7 +29,7 @@ try {
         let value = match[2] || '';
         value = value.replace(/(^['"]|['"]$)/g, '').trim(); // Remove quotes
         // Only use .env value if process.env doesn't already have it (like from Hostinger Dashboard)
-        if (key === 'DB_HOST' && !process.env.DB_HOST) dbConfig.host = (value === 'localhost') ? '127.0.0.1' : value;
+        if (key === 'DB_HOST' && !process.env.DB_HOST) dbConfig.host = value;
         if (key === 'DB_USER' && !process.env.DB_USER) dbConfig.user = value;
         if (key === 'DB_PASSWORD' && !process.env.DB_PASSWORD) dbConfig.password = value;
         if (key === 'DB_NAME' && !process.env.DB_NAME) dbConfig.database = value;
@@ -40,10 +40,7 @@ try {
   console.log('Manual env parsing skipped');
 }
 
-// Hostinger IPv6 fix: Always force 127.0.0.1 if host is localhost
-if (dbConfig.host === 'localhost') {
-  dbConfig.host = '127.0.0.1';
-}
+// Removed forced 127.0.0.1 override to support Hostinger MySQL sockets
 
 const pool = mysql.createPool({
   ...dbConfig,
