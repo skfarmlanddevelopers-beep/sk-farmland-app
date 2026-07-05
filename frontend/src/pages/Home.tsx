@@ -419,7 +419,7 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
               <span className="text-2xl">🏡</span> <AnimatedText text="Why Choose SK Farmland Developers" />
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-6">
-              {['100% Clear Title & Legal Verification', 'Options: Private, Managed & Plain Land', 'Projects available near Bangalore & Pondicherry', 'Prime locations with good road connectivity', 'Transparent & hassle-free process', 'Complete guidance from booking to registration'].map((f, i) => (
+              {['100% Clear Title & Legal Verification', 'Managed Farmland & Plain Land', 'Projects available near Bengaluru', 'Prime locations with good road connectivity', 'Transparent & hassle-free process', 'Complete guidance from booking to registration'].map((f, i) => (
                 <div key={i} className="flex gap-4 items-start group">
                   <div className="bg-orange-500/10 p-2 rounded-full group-hover:bg-orange-500/20 transition-colors shrink-0">
                     <Check size={16} className="text-orange-500 shrink-0" />
