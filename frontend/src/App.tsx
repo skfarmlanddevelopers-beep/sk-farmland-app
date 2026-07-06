@@ -42,7 +42,7 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'auto' });
   }, [activePage]);
 
-  // Support for /?admin URL
+  // Synchronize state with URL pathname for SEO friendly routing on mount
   useEffect(() => {
     if (window.location.search.includes('admin') || window.location.pathname.includes('admin')) {
       const isAuthenticated = sessionStorage.getItem('sk_admin_auth') === 'true';
@@ -51,8 +51,65 @@ export default function App() {
       } else {
         setActivePage('adminLogin');
       }
+      return;
+    }
+
+    const path = window.location.pathname.replace(/^\/|\/$/g, '').toLowerCase();
+    
+    // Map path names to PageId values
+    const pageMap: Record<string, PageId> = {
+      'about': 'about',
+      'about-us': 'about',
+      'projects': 'projects',
+      'managed-farmland': 'managed',
+      'managed': 'managed',
+      'plain-land': 'plain',
+      'plain': 'plain',
+      'journey': 'journey',
+      'your-journey': 'journey',
+      'gallery': 'gallery',
+      'contact': 'contact',
+      'contact-us': 'contact',
+      'faqs': 'faqs',
+      'faq': 'faqs',
+      'testimonials': 'testimonials',
+      'terms': 'terms',
+      'terms-conditions': 'terms',
+      'privacy': 'privacy',
+      'privacy-policy': 'privacy',
+      'disclaimer': 'disclaimer',
+    };
+    
+    if (pageMap[path]) {
+      setActivePage(pageMap[path]);
     }
   }, []);
+
+  // Synchronize URL path when activePage state changes
+  useEffect(() => {
+    if (activePage === 'adminLogin' || activePage === 'adminDashboard') return;
+    
+    const urlMap: Record<PageId, string> = {
+      home: '/',
+      about: '/about',
+      projects: '/projects',
+      managed: '/managed-farmland',
+      plain: '/plain-land',
+      journey: '/your-journey',
+      gallery: '/gallery',
+      contact: '/contact',
+      faqs: '/faqs',
+      testimonials: '/testimonials',
+      terms: '/terms',
+      privacy: '/privacy',
+      disclaimer: '/disclaimer',
+    };
+    
+    const targetPath = urlMap[activePage] || '/';
+    if (window.location.pathname !== targetPath) {
+      window.history.pushState(null, '', targetPath);
+    }
+  }, [activePage]);
 
   const handleBookWithProject = (projectName?: string) => {
     if (projectName) {
