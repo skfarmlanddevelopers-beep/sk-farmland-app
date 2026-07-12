@@ -1,5 +1,5 @@
+import React, { useRef } from 'react';
 import { motion, useInView } from 'motion/react';
-import { useRef } from 'react';
 
 type Direction = 'up' | 'down' | 'left' | 'right' | 'none';
 type AnimationType = 'fade' | 'slide' | '3d-flip-x' | '3d-flip-y' | 'scale';
@@ -13,6 +13,7 @@ interface AnimatedRevealProps {
   className?: string;
   threshold?: number;
   once?: boolean;
+  key?: React.Key;
 }
 
 export default function AnimatedReveal({

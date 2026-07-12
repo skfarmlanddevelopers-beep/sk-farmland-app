@@ -18,18 +18,71 @@ app.use(compression());
 app.use(cors());
 app.use(express.json());
 
-// Configure multer for file uploads in memory (to convert to base64)
+// Serve uploaded static files
+const uploadsDir = path.join(__dirname, 'user-uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+app.use('/uploads', express.static(uploadsDir));
+
+// Configure multer for file uploads in memory
 const storage = multer.memoryStorage();
 const upload = multer({ 
   storage,
   limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
 });
 
-// Helper function to convert buffer to base64 data URL
+// Helper function to convert buffer to base64 data URL (legacy fallback)
 const getBase64DataUrl = (file) => {
   if (!file) return null;
   const b64 = file.buffer.toString('base64');
   return `data:${file.mimetype};base64,${b64}`;
+};
+
+// Helper function to save buffer to disk and return relative URL
+const saveUploadFile = async (file) => {
+  if (!file) return null;
+  try {
+    const ext = path.extname(file.originalname) || '.jpg';
+    const filename = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}${ext}`;
+    const filePath = path.join(uploadsDir, filename);
+    await fs.promises.writeFile(filePath, file.buffer);
+    return `/uploads/${filename}`;
+  } catch (err) {
+    console.error('Failed to save uploaded file:', err);
+    return null;
+  }
+};
+
+// Helper to extract base64 and save to disk (auto migration)
+const migrateBase64ToFile = async (base64Str) => {
+  if (typeof base64Str !== 'string' || !base64Str.startsWith('data:image/')) {
+    return base64Str; // Already a URL or not a base64 string
+  }
+  
+  try {
+    const match = base64Str.match(/^data:(image\/[a-zA-Z+-]+);base64,(.+)$/);
+    if (!match) return base64Str;
+    
+    const mimeType = match[1];
+    const base64Data = match[2];
+    const buffer = Buffer.from(base64Data, 'base64');
+    
+    let ext = '.jpg';
+    if (mimeType === 'image/png') ext = '.png';
+    else if (mimeType === 'image/gif') ext = '.gif';
+    else if (mimeType === 'image/svg+xml') ext = '.svg';
+    else if (mimeType === 'image/webp') ext = '.webp';
+    
+    const filename = `migrated-${Date.now()}-${Math.random().toString(36).substring(2, 10)}${ext}`;
+    const filePath = path.join(uploadsDir, filename);
+    await fs.promises.writeFile(filePath, buffer);
+    console.log(`Migrated base64 image to ${filename}`);
+    return `/uploads/${filename}`;
+  } catch (err) {
+    console.error('Failed to migrate base64 image:', err);
+    return base64Str;
+  }
 };
 
 
@@ -135,14 +188,14 @@ app.post('/api/gallery', upload.array('images', 20), async (req, res) => {
     }
     const uploadedPaths = [];
     for (const file of req.files) {
-      const b64DataUrl = getBase64DataUrl(file);
+      const url = await saveUploadFile(file);
       const id = Date.now().toString() + Math.random().toString(36).substring(7);
       const title = 'Custom Upload';
       const category = 'Custom';
       const description = '';
       
-      await db.query('INSERT INTO gallery (id, title, category, image, description) VALUES (?, ?, ?, ?, ?)', [id, title, category, b64DataUrl, description]);
-      uploadedPaths.push(b64DataUrl);
+      await db.query('INSERT INTO gallery (id, title, category, image, description) VALUES (?, ?, ?, ?, ?)', [id, title, category, url, description]);
+      if (url) uploadedPaths.push(url);
     }
     res.json({ success: true, image_paths: uploadedPaths });
   } catch (err) {
@@ -185,9 +238,9 @@ app.post('/api/hero-images', upload.array('images', 20), async (req, res) => {
     }
     const uploadedPaths = [];
     for (const file of req.files) {
-      const b64DataUrl = getBase64DataUrl(file);
-      await db.query('INSERT INTO hero_images (side, image_path) VALUES (?, ?)', [side, b64DataUrl]);
-      uploadedPaths.push(b64DataUrl);
+      const url = await saveUploadFile(file);
+      await db.query('INSERT INTO hero_images (side, image_path) VALUES (?, ?)', [side, url]);
+      if (url) uploadedPaths.push(url);
     }
     res.json({ success: true, image_paths: uploadedPaths });
   } catch (err) {
@@ -398,6 +451,73 @@ async function initDb() {
       }
     } catch (e) { console.error('Failed inserting admin:', e.message); }
 
+    // Auto-migration: Migrate legacy base64 images to file-based uploads
+    try {
+      console.log('Checking for base64 image migration...');
+      
+      // Migrate Projects images
+      try {
+        const [projects] = await db.query('SELECT id, images FROM projects');
+        for (const project of projects) {
+          let images = [];
+          try {
+            images = typeof project.images === 'string' ? JSON.parse(project.images) : project.images;
+          } catch (e) {
+            continue;
+          }
+          
+          if (Array.isArray(images)) {
+            let updated = false;
+            const newImages = [];
+            for (const img of images) {
+              if (typeof img === 'string' && img.startsWith('data:image/')) {
+                const url = await migrateBase64ToFile(img);
+                newImages.push(url);
+                updated = true;
+              } else {
+                newImages.push(img);
+              }
+            }
+            if (updated) {
+              await db.query('UPDATE projects SET images = ? WHERE id = ?', [JSON.stringify(newImages), project.id]);
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Projects image migration failed:', err);
+      }
+
+      // Migrate Gallery images
+      try {
+        const [galleryItems] = await db.query('SELECT id, image FROM gallery');
+        for (const item of galleryItems) {
+          if (typeof item.image === 'string' && item.image.startsWith('data:image/')) {
+            const url = await migrateBase64ToFile(item.image);
+            await db.query('UPDATE gallery SET image = ? WHERE id = ?', [url, item.id]);
+          }
+        }
+      } catch (err) {
+        console.error('Gallery image migration failed:', err);
+      }
+
+      // Migrate Hero images
+      try {
+        const [heroImages] = await db.query('SELECT id, image_path FROM hero_images');
+        for (const img of heroImages) {
+          if (typeof img.image_path === 'string' && img.image_path.startsWith('data:image/')) {
+            const url = await migrateBase64ToFile(img.image_path);
+            await db.query('UPDATE hero_images SET image_path = ? WHERE id = ?', [url, img.id]);
+          }
+        }
+      } catch (err) {
+        console.error('Hero images migration failed:', err);
+      }
+      
+      console.log('Base64 image check/migration completed.');
+    } catch (err) {
+      console.error('General migration error:', err);
+    }
+
     console.log('Database tables verified.');
   } catch (error) {
     console.error('Database initialization failed:', error);
@@ -434,8 +554,14 @@ app.post('/api/projects', upload.array('images', 15), async (req, res) => {
       return res.status(400).json({ error: 'Project name is required' });
     }
     
-    // Process uploaded images to base64
-    const imagePaths = req.files ? req.files.map(f => getBase64DataUrl(f)) : [];
+    // Process uploaded images and save to disk
+    const imagePaths = [];
+    if (req.files) {
+      for (const file of req.files) {
+        const url = await saveUploadFile(file);
+        if (url) imagePaths.push(url);
+      }
+    }
     
     // Parse highlights
     let parsedHighlights = [];
@@ -493,7 +619,11 @@ app.put('/api/projects/:id', upload.array('images', 15), async (req, res) => {
 
     if (req.files && req.files.length > 0) {
       // New images uploaded
-      const imagePaths = req.files.map(f => getBase64DataUrl(f));
+      const imagePaths = [];
+      for (const file of req.files) {
+        const url = await saveUploadFile(file);
+        if (url) imagePaths.push(url);
+      }
       await db.query(
         'UPDATE projects SET heading = ?, name = ?, sub_heading = ?, price = ?, bank_loan = ?, images = ?, highlights = ?, show_on_home = ? WHERE id = ?',
         [heading || '', name, sub_heading || '', price || '', bank_loan || '', JSON.stringify(imagePaths), JSON.stringify(parsedHighlights), isShowOnHome, id]

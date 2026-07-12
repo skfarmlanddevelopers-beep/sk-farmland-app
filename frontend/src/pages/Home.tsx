@@ -98,6 +98,11 @@ interface HomeProps {
   onBookClick: () => void;
 }
 
+// Module-level caches to survive component unmount/remount
+let homeHeroLeftCache: string[] | null = null;
+let homeHeroRightCache: string[] | null = null;
+let homeProjectsCache: any[] | null = null;
+
 export default function Home({ setActivePage, onBookClick }: HomeProps) {
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress: heroScroll } = useScroll({
@@ -108,9 +113,9 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
   const yLeft = useTransform(heroScroll, [0, 1], ["0%", "15%"]);
   const yRight = useTransform(heroScroll, [0, 1], ["0%", "25%"]);
 
-  const [dynamicLeftImages, setDynamicLeftImages] = useState<string[]>([]);
-  const [dynamicRightImages, setDynamicRightImages] = useState<string[]>([]);
-  const [dynamicProjects, setDynamicProjects] = useState<any[]>([]);
+  const [dynamicLeftImages, setDynamicLeftImages] = useState<string[]>(homeHeroLeftCache || []);
+  const [dynamicRightImages, setDynamicRightImages] = useState<string[]>(homeHeroRightCache || []);
+  const [dynamicProjects, setDynamicProjects] = useState<any[]>(homeProjectsCache || []);
 
   useEffect(() => {
     const fetchHeroImages = async () => {
@@ -120,6 +125,8 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
           const data = await response.json();
           const lefts = data.filter((img: any) => img.side === 'left').map((img: any) => img.image_path);
           const rights = data.filter((img: any) => img.side === 'right').map((img: any) => img.image_path);
+          homeHeroLeftCache = lefts;
+          homeHeroRightCache = rights;
           setDynamicLeftImages(lefts);
           setDynamicRightImages(rights);
         }
@@ -127,7 +134,7 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
         console.error('Failed to fetch dynamic hero images:', err);
       }
     };
-    
+
     const fetchProjects = async () => {
       try {
         const response = await fetch(`/api/projects?home=true&t=${new Date().getTime()}`, { cache: 'no-store' });
@@ -144,6 +151,7 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
             images: safeParse(proj.images),
             highlights: safeParse(proj.highlights),
           }));
+          homeProjectsCache = formattedData;
           setDynamicProjects(formattedData);
         }
       } catch (err) {
@@ -156,11 +164,11 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
   }, []);
 
 
-  const finalLeftImages = dynamicLeftImages;
-  const finalLeftLabels = dynamicLeftImages.length > 0 ? Array(dynamicLeftImages.length).fill("SK Farmland Community") : [];
+  const finalLeftImages = dynamicLeftImages.length > 0 ? dynamicLeftImages : [heroTop];
+  const finalLeftLabels = finalLeftImages.map(() => "SK Farmland Community");
 
-  const finalRightImages = dynamicRightImages;
-  const finalRightLabels = dynamicRightImages.length > 0 ? Array(dynamicRightImages.length).fill("Premium Lifestyle") : [];
+  const finalRightImages = dynamicRightImages.length > 0 ? dynamicRightImages : [heroBottom];
+  const finalRightLabels = finalRightImages.map(() => "Premium Lifestyle");
 
   // Animation presets
   const containerVariants = {
@@ -305,7 +313,7 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
             <p><AnimatedText type="typing" text="Imagine living far away from the hustle and bustle of the city — surrounded by pure nature, undisturbed, and completely free from pollution." duration={1.5} /></p>
             <p><AnimatedText type="typing" text="Wake up to the sound of birds, breathe in fresh air, and enjoy wide open spaces where you can grow your own food, walk among greenery, and reconnect with a healthier lifestyle." duration={2} delay={0.5} /></p>
             <p><AnimatedText type="typing" text="Our farmland is ideal for cultivating crops such as mango, guava, papaya, banana, sugarcane, vegetables, and seasonal grains, supported by fertile soil and water availability." duration={2} delay={1.0} /></p>
-            <p><AnimatedText type="typing" text="You can also keep animals like chickens, cows, dogs, sheep, goats, or birds, making your land not just an investment—but a complete countryside experience." duration={2} delay={1.5} /></p>
+            <p><AnimatedText type="typing" text="You can also keep pet animals like chickens, cows, dogs, sheep, goats, or birds, making your land not just an investment—but a complete countryside experience." duration={2} delay={1.5} /></p>
           </div>
         </div>
       </AnimatedReveal>
@@ -483,7 +491,7 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
         {dynamicProjects.length > 0 ? (
           dynamicProjects.map((project, idx) => (
             <div key={project.id} className="w-full">
-              <div 
+              <div
                 className="bg-[#090909] border-2 border-orange-600 rounded-2xl p-6 md:p-10 shadow-[0_8px_30px_rgba(0,0,0,0.5)] mt-6 w-full"
               >
                 <div className="mb-6 flex flex-col gap-1">
@@ -491,7 +499,7 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
                   <h3 className="text-2xl sm:text-3xl font-bold text-white leading-tight">{project.name}</h3>
                   {project.sub_heading && <p className="text-zinc-400 font-bold text-2xl sm:text-3xl">{project.sub_heading}</p>}
                 </div>
-                
+
                 {project.images && project.images.length > 0 && (
                   <div className="mb-8">
                     <HeroCarousel
@@ -502,22 +510,22 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
                     />
                   </div>
                 )}
-    
+
                 <div className="space-y-6">
                   <h4 className="text-xl font-bold text-orange-500 flex items-center gap-2">
                     🌿 Project Highlights
                   </h4>
-                  
+
                   <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm md:text-base text-zinc-300">
                     {project.highlights && project.highlights.map((highlight: any, i: number) => (
                       <li key={i} className="flex items-start gap-2">
-                        <Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" /> 
+                        <Check className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" />
                         <span>{typeof highlight === "object" && highlight !== null ? ((highlight as any).heading ? (highlight as any).heading + ": " + (highlight as any).text : (highlight as any).text) : highlight}</span>
                       </li>
                     ))}
                   </ul>
-    
-                  {( (project.price && project.price.trim() !== '') || (project.bank_loan && project.bank_loan.trim() !== '') ) && (
+
+                  {((project.price && project.price.trim() !== '') || (project.bank_loan && project.bank_loan.trim() !== '')) && (
                     <div className="mt-8 p-6 md:p-8 bg-zinc-950/80 border-2 border-orange-600/50 hover:border-orange-500 transition-all rounded-2xl flex flex-col md:flex-row gap-8 md:gap-6 justify-between items-center shadow-xl">
                       <div className="text-center md:text-left flex-1">
                         <h5 className="text-sm md:text-base font-bold text-zinc-400 uppercase tracking-widest mb-2">Pricing</h5>

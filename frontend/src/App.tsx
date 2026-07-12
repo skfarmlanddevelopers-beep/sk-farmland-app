@@ -89,7 +89,7 @@ export default function App() {
   useEffect(() => {
     if (activePage === 'adminLogin' || activePage === 'adminDashboard') return;
     
-    const urlMap: Record<PageId, string> = {
+    const urlMap: Partial<Record<PageId, string>> = {
       home: '/',
       about: '/about',
       projects: '/projects',

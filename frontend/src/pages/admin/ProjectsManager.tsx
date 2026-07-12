@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Trash2, Upload, Plus, X, Edit } from 'lucide-react';
 import { compressImage } from '../../components/imageCompressor';
 
@@ -10,6 +10,7 @@ interface Project {
   price: string;
   bank_loan: string;
   images: string[];
+  highlights?: string[];
   show_on_home?: boolean;
   display_order?: number;
 }
@@ -85,7 +86,7 @@ export default function ProjectsManager() {
     formData.append('show_on_home', showOnHome.toString());
 
     if (files) {
-      for (const file of Array.from(files)) {
+      for (const file of Array.from(files) as File[]) {
         const compressedFile = await compressImage(file);
         formData.append('images', compressedFile);
       }

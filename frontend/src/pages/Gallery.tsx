@@ -37,9 +37,12 @@ function ParallaxGalleryImage({ src, alt }: { src: string; alt: string }) {
   );
 }
 
+let galleryCache: GalleryItem[] | null = null;
+
 export default function Gallery({ onBookClick }: GalleryProps) {
   const [selectedImage, setSelectedImage] = useState<GalleryItem | null>(null);
-  const [dynamicGallery, setDynamicGallery] = useState<GalleryItem[]>([]);
+  const [dynamicGallery, setDynamicGallery] = useState<GalleryItem[]>(galleryCache || []);
+  const [loading, setLoading] = useState(!galleryCache);
 
   useEffect(() => {
     const fetchGallery = async () => {
@@ -48,10 +51,13 @@ export default function Gallery({ onBookClick }: GalleryProps) {
         if (response.ok) {
           const data = await response.json();
           const customImages = data.filter((img: any) => img.image && (img.image.startsWith('/uploads/') || img.image.startsWith('data:image/')));
+          galleryCache = customImages;
           setDynamicGallery(customImages);
         }
       } catch (err) {
         console.error('Failed to fetch dynamic gallery', err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchGallery();
@@ -89,32 +95,42 @@ export default function Gallery({ onBookClick }: GalleryProps) {
       </motion.section>
 
       <section id="gallery-grid-wrapper" className="mx-auto max-w-5xl xl:max-w-6xl 2xl:max-w-7xl px-4 space-y-6">
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-20 space-y-4">
+            <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-zinc-400 text-sm font-medium animate-pulse">Loading gallery...</p>
+          </div>
+        ) : combinedGalleryData.length > 0 ? (
+          /* Gallery Grid */
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <AnimatePresence mode="popLayout">
+              {combinedGalleryData.map((item: GalleryItem) => (
+                <motion.div
+                  key={item.id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.3 }}
+                  className="group relative bg-[#090909] border-2 border-orange-600 hover:border-orange-500 transition-colors rounded-xl overflow-hidden cursor-pointer"
+                  onClick={() => setSelectedImage(item)}
+                >
+                  {/* Image Box with Parallax */}
+                  <ParallaxGalleryImage
+                    src={item.image}
+                    alt={item.title}
+                  />
 
-        {/* Gallery Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <AnimatePresence mode="popLayout">
-            {combinedGalleryData.map((item: GalleryItem) => (
-              <motion.div
-                key={item.id}
-                layout
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.3 }}
-                className="group relative bg-[#090909] border-2 border-orange-600 hover:border-orange-500 transition-colors rounded-xl overflow-hidden cursor-pointer"
-                onClick={() => setSelectedImage(item)}
-              >
-                {/* Image Box with Parallax */}
-                <ParallaxGalleryImage
-                  src={item.image}
-                  alt={item.title}
-                />
 
-
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        ) : (
+          <div className="text-center py-20 text-zinc-500">
+            <p>No gallery images available at the moment. Please check back later.</p>
+          </div>
+        )}
 
       </section>
 

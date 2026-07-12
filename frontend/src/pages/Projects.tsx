@@ -50,8 +50,11 @@ interface ProjectsProps {
   onBookClick: (projectName?: string) => void;
 }
 
+let projectsCache: any[] | null = null;
+
 export default function Projects({ onBookClick }: ProjectsProps) {
-  const [projects, setProjects] = useState<any[]>([]);
+  const [projects, setProjects] = useState<any[]>(projectsCache || []);
+  const [loading, setLoading] = useState(!projectsCache);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -70,10 +73,13 @@ export default function Projects({ onBookClick }: ProjectsProps) {
             images: safeParse(proj.images),
             highlights: safeParse(proj.highlights),
           }));
+          projectsCache = formattedData;
           setProjects(formattedData);
         }
       } catch (err) {
         console.error('Failed to fetch projects:', err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchProjects();
@@ -96,7 +102,12 @@ export default function Projects({ onBookClick }: ProjectsProps) {
         </p>
       </div>
 
-      {projects.length > 0 ? (
+      {loading ? (
+        <div className="flex flex-col items-center justify-center py-20 space-y-4">
+          <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-zinc-400 text-sm font-medium animate-pulse">Loading premium projects...</p>
+        </div>
+      ) : projects.length > 0 ? (
         projects.map((project, idx) => (
           <div
             key={project.id}
