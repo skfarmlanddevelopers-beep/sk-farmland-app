@@ -85,6 +85,91 @@ export default function App() {
     }
   }, []);
 
+  // Pre-fetch dynamic data in the background to warm up localStorage cache for instant sub-page loads
+  useEffect(() => {
+    // Check if we are on admin dashboard/login to prevent unneeded hits
+    if (window.location.search.includes('admin') || window.location.pathname.includes('admin')) {
+      return;
+    }
+
+    const prefetchData = async () => {
+      try {
+        // 1. Prefetch hero images
+        fetch('/api/hero-images')
+          .then(res => res.ok ? res.json() : null)
+          .then(data => {
+            if (data) {
+              const lefts = data.filter((img: any) => img.side === 'left').map((img: any) => img.image_path);
+              const rights = data.filter((img: any) => img.side === 'right').map((img: any) => img.image_path);
+              try {
+                localStorage.setItem('homeHeroLeftCache', JSON.stringify(lefts));
+                localStorage.setItem('homeHeroRightCache', JSON.stringify(rights));
+              } catch (e) {}
+            }
+          }).catch(() => {});
+
+        // 2. Prefetch home projects
+        fetch(`/api/projects?home=true&t=${new Date().getTime()}`, { cache: 'no-store' })
+          .then(res => res.ok ? res.json() : null)
+          .then(data => {
+            if (data) {
+              const safeParse = (str: any) => {
+                if (typeof str !== 'string') return str;
+                try { return JSON.parse(str); } catch (e) { return []; }
+              };
+              const formattedData = data.map((proj: any) => ({
+                ...proj,
+                images: safeParse(proj.images),
+                highlights: safeParse(proj.highlights),
+              }));
+              try {
+                localStorage.setItem('homeProjectsCache', JSON.stringify(formattedData));
+              } catch (e) {}
+            }
+          }).catch(() => {});
+
+        // 3. Prefetch all projects (for Projects page and booking dropdown)
+        fetch('/api/projects?all=true')
+          .then(res => res.ok ? res.json() : null)
+          .then(data => {
+            if (data) {
+              const safeParse = (str: any) => {
+                if (typeof str !== 'string') return str;
+                try { return JSON.parse(str); } catch (e) { return []; }
+              };
+              const formattedData = data.map((proj: any) => ({
+                ...proj,
+                images: safeParse(proj.images),
+                highlights: safeParse(proj.highlights),
+              }));
+              try {
+                localStorage.setItem('projectsCache', JSON.stringify(formattedData));
+              } catch (e) {}
+            }
+          }).catch(() => {});
+
+        // 4. Prefetch gallery images
+        fetch('/api/gallery')
+          .then(res => res.ok ? res.json() : null)
+          .then(data => {
+            if (data) {
+              const customImages = data.filter((img: any) => img.image && (img.image.startsWith('/uploads/') || img.image.startsWith('data:image/')));
+              try {
+                localStorage.setItem('galleryCache', JSON.stringify(customImages));
+              } catch (e) {}
+            }
+          }).catch(() => {});
+
+      } catch (err) {
+        console.error('Failed to pre-fetch background data:', err);
+      }
+    };
+
+    // Delay pre-fetching by 1.2 seconds to not block main thread loading animations
+    const timer = setTimeout(prefetchData, 1200);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Synchronize URL path when activePage state changes
   useEffect(() => {
     if (activePage === 'adminLogin' || activePage === 'adminDashboard') return;

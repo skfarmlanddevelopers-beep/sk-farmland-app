@@ -22,7 +22,14 @@ export default function BookVisitModal({ isOpen, onClose, preSelectedProject = '
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [dynamicProjects, setDynamicProjects] = useState<any[]>([]);
+  const [dynamicProjects, setDynamicProjects] = useState<any[]>(() => {
+    try {
+      const cached = localStorage.getItem('projectsCache');
+      return cached ? JSON.parse(cached) : [];
+    } catch (e) {
+      return [];
+    }
+  });
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -31,6 +38,10 @@ export default function BookVisitModal({ isOpen, onClose, preSelectedProject = '
         if (response.ok) {
           const data = await response.json();
           setDynamicProjects(data);
+          try {
+            // Also store it for future loads
+            localStorage.setItem('projectsCache', JSON.stringify(data));
+          } catch (e) {}
         }
       } catch (err) {
         console.error('Failed to fetch projects', err);

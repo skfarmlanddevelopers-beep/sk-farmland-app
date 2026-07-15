@@ -98,10 +98,25 @@ interface HomeProps {
   onBookClick: () => void;
 }
 
-// Module-level caches to survive component unmount/remount
-let homeHeroLeftCache: string[] | null = null;
-let homeHeroRightCache: string[] | null = null;
-let homeProjectsCache: any[] | null = null;
+// Module-level caches to survive component unmount/remount (restored from LocalStorage for persistence)
+const getLocalStorageJSON = (key: string, fallback: any) => {
+  try {
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : fallback;
+  } catch (e) {
+    return fallback;
+  }
+};
+
+const setLocalStorageJSON = (key: string, data: any) => {
+  try {
+    localStorage.setItem(key, JSON.stringify(data));
+  } catch (e) {}
+};
+
+let homeHeroLeftCache: string[] | null = getLocalStorageJSON('homeHeroLeftCache', null);
+let homeHeroRightCache: string[] | null = getLocalStorageJSON('homeHeroRightCache', null);
+let homeProjectsCache: any[] | null = getLocalStorageJSON('homeProjectsCache', null);
 
 export default function Home({ setActivePage, onBookClick }: HomeProps) {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -125,8 +140,12 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
           const data = await response.json();
           const lefts = data.filter((img: any) => img.side === 'left').map((img: any) => img.image_path);
           const rights = data.filter((img: any) => img.side === 'right').map((img: any) => img.image_path);
+          
           homeHeroLeftCache = lefts;
           homeHeroRightCache = rights;
+          setLocalStorageJSON('homeHeroLeftCache', lefts);
+          setLocalStorageJSON('homeHeroRightCache', rights);
+          
           setDynamicLeftImages(lefts);
           setDynamicRightImages(rights);
         }
@@ -151,7 +170,9 @@ export default function Home({ setActivePage, onBookClick }: HomeProps) {
             images: safeParse(proj.images),
             highlights: safeParse(proj.highlights),
           }));
+          
           homeProjectsCache = formattedData;
+          setLocalStorageJSON('homeProjectsCache', formattedData);
           setDynamicProjects(formattedData);
         }
       } catch (err) {

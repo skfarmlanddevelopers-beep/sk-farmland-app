@@ -50,7 +50,22 @@ interface ProjectsProps {
   onBookClick: (projectName?: string) => void;
 }
 
-let projectsCache: any[] | null = null;
+const getLocalStorageJSON = (key: string, fallback: any) => {
+  try {
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : fallback;
+  } catch (e) {
+    return fallback;
+  }
+};
+
+const setLocalStorageJSON = (key: string, data: any) => {
+  try {
+    localStorage.setItem(key, JSON.stringify(data));
+  } catch (e) {}
+};
+
+let projectsCache: any[] | null = getLocalStorageJSON('projectsCache', null);
 
 export default function Projects({ onBookClick }: ProjectsProps) {
   const [projects, setProjects] = useState<any[]>(projectsCache || []);
@@ -74,6 +89,7 @@ export default function Projects({ onBookClick }: ProjectsProps) {
             highlights: safeParse(proj.highlights),
           }));
           projectsCache = formattedData;
+          setLocalStorageJSON('projectsCache', formattedData);
           setProjects(formattedData);
         }
       } catch (err) {

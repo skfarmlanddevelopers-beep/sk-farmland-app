@@ -37,7 +37,22 @@ function ParallaxGalleryImage({ src, alt }: { src: string; alt: string }) {
   );
 }
 
-let galleryCache: GalleryItem[] | null = null;
+const getLocalStorageJSON = (key: string, fallback: any) => {
+  try {
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : fallback;
+  } catch (e) {
+    return fallback;
+  }
+};
+
+const setLocalStorageJSON = (key: string, data: any) => {
+  try {
+    localStorage.setItem(key, JSON.stringify(data));
+  } catch (e) {}
+};
+
+let galleryCache: GalleryItem[] | null = getLocalStorageJSON('galleryCache', null);
 
 export default function Gallery({ onBookClick }: GalleryProps) {
   const [selectedImage, setSelectedImage] = useState<GalleryItem | null>(null);
@@ -52,6 +67,7 @@ export default function Gallery({ onBookClick }: GalleryProps) {
           const data = await response.json();
           const customImages = data.filter((img: any) => img.image && (img.image.startsWith('/uploads/') || img.image.startsWith('data:image/')));
           galleryCache = customImages;
+          setLocalStorageJSON('galleryCache', customImages);
           setDynamicGallery(customImages);
         }
       } catch (err) {

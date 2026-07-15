@@ -23,7 +23,10 @@ const uploadsDir = path.join(__dirname, 'user-uploads');
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
-app.use('/uploads', express.static(uploadsDir));
+app.use('/uploads', express.static(uploadsDir, {
+  maxAge: '31536000000', // 1 year
+  immutable: true
+}));
 
 // Configure multer for file uploads in memory
 const storage = multer.memoryStorage();
@@ -685,7 +688,16 @@ app.delete('/api/projects/:id', async (req, res) => {
 });
 
 // Serve frontend static files
-app.use(express.static(path.join(__dirname, '../frontend/dist')));
+app.use(express.static(path.join(__dirname, '../frontend/dist'), {
+  maxAge: '31536000000', // 1 year
+  setHeaders: (res, filepath) => {
+    if (filepath.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    } else {
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    }
+  }
+}));
 
 // Catch-all route to serve the React app
 app.get('*', (req, res) => {
